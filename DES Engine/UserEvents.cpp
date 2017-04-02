@@ -36,10 +36,10 @@ void UserEvents::Add(const void *Parameters, void *ReturnValue)
 	int *B = A;
 	B++;
 
-	int C = *A + *B;
-	
-	memcpy(ReturnValue, &C, sizeof(int));
-	//(int)*ReturnValue = *A;
+	int *C = (int*)ReturnValue;
+	*C = *A + *B;
+
+	//memcpy(ReturnValue, &C, sizeof(int));
 	return;
 }
 
