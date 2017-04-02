@@ -1,3 +1,7 @@
+// Project for "PCS3216 - Programming Systems"
+// Polytechnic School of the University of Sao Paulo
+// Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
+
 #pragma once
 #include <string>
 
@@ -14,7 +18,6 @@ public:
 
 private:
 	// TODO: User - Implement own functions here
-	// Adds OUT *C = A+B;
 	void Add(const void *Parameters, void *ReturnValue);
 };
 

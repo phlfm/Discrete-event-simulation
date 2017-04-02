@@ -1,3 +1,7 @@
+// Project for "PCS3216 - Programming Systems"
+// Polytechnic School of the University of Sao Paulo
+// Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
+
 #include "UserEvents.h"
 #include <iostream>
 #include "Main.h"
@@ -10,7 +14,7 @@ int main()
 {
 
 
-	UserEvents UsrEvt;
+	UserEvents UsrEvt = UserEvents();
 
 	CallUserFunctionADD(UsrEvt);
 
