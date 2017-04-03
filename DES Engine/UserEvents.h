@@ -4,20 +4,33 @@
 
 #pragma once
 #include <string>
+#include <vector>
+
+
 
 class UserEvents
 {
-
+	
 public:
+	struct FunctionPointerAlias { std::string FAlias; void(UserEvents::*FPointer)(const void*, void*); };
+
+	// Here we have a vector that assigns an alias (string) to each User Function (pointer)
+	std::vector<FunctionPointerAlias> UFPAliasMap;
+
+	// Constructs the struct FunctionPointerAlias { std::string FAlias; void(*FPointer)(const void*, void*); };
+	FunctionPointerAlias MakeFPAlias(std::string FAlias, void(UserEvents::*FPointer)(const void*, void*));
+
 	// Class constructor / destructor
 	UserEvents();
+	void BuildUFPAliasMap();
 	~UserEvents();
 
 	// Select which function(parameters) to call depending on event alias and returns ReturnValue
 	void Choose(const std::string Alias, const void *Parameters, void *ReturnValue);
 
+
 private:
-	// TODO: User - Implement own functions here
+
 	void Add(const void *Parameters, void *ReturnValue);
 };
 
