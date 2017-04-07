@@ -22,11 +22,12 @@ public:
 
 	// Class constructor / destructor
 	UserEvents();
-	void BuildUFPAliasMap();
 	~UserEvents();
 
+	void BuildUFPAliasMap();
+
 	// Select which function(parameters) to call depending on event alias and returns ReturnValue
-	void Choose(const std::string Alias, const void *Parameters, void *ReturnValue);
+	int Choose(const std::string Alias, const void *Parameters, void *ReturnValue);
 
 
 private:

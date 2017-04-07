@@ -3,7 +3,6 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "UserEvents.h"
-#include <iostream>
 
 // Class Constructor
 UserEvents::UserEvents()
@@ -14,10 +13,13 @@ UserEvents::UserEvents()
 // Class Destructor
 UserEvents::~UserEvents()
 {
+	UFPAliasMap.~vector();
+
 }
 
 // Select which function(parameters) to call depending on event alias and returns ReturnValue
-void UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
+// Returns i when alias is found, -1 if not found
+int UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
 {
 	for (int i = 0; i < UFPAliasMap.size(); i++)
 	{
@@ -31,11 +33,12 @@ void UserEvents::Choose(const std::string Alias, const void *Parameters, void *R
 			/** Method TWO - Working!!! **
 			(this->*UFPAliasMap[0].FPointer)(Parameters, ReturnValue);
 			/**/
-			return;
+			return i;
 		}
 	}
 
 	//TODO: What do if no alias is found?
+	return -1;
 }
 
 #pragma region UFPMap Definitions
