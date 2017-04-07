@@ -3,6 +3,7 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "UserEvents.h"
+#include <iostream>
 
 // Class Constructor
 UserEvents::UserEvents()
@@ -18,18 +19,20 @@ UserEvents::~UserEvents()
 // Select which function(parameters) to call depending on event alias and returns ReturnValue
 void UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
 {
-	//TODO: Make iterate over UFPAliasMap to find the proper Alias/Function Pointer
+	for (int i = 0; i < UFPAliasMap.size(); i++)
+	{
+		if (Alias == UFPAliasMap[i].FAlias)
+		{
+			/** Method ONE - Working!!! **/
+			void (UserEvents::*FunctionPointer)(const void*, void*) = UFPAliasMap[i].FPointer;
+			(this->*FunctionPointer)(Parameters, ReturnValue);
+			/**/
 
-	if (Alias == "Add") {
-		/** Method ONE - Working!!! **/
-		void (UserEvents::*FunctionPointer)(const void*, void*) = UFPAliasMap[0].FPointer;
-		(this->*FunctionPointer)(Parameters, ReturnValue);
-		/**/
-
-		/** Method TWO - Working!!! **
-		(this->*UFPAliasMap[0].FPointer)(Parameters, ReturnValue);
-		/**/
-		return;
+			/** Method TWO - Working!!! **
+			(this->*UFPAliasMap[0].FPointer)(Parameters, ReturnValue);
+			/**/
+			return;
+		}
 	}
 
 	//TODO: What do if no alias is found?
