@@ -43,17 +43,10 @@ int UserEvents::Choose(const std::string Alias, const void *Parameters, void *Re
 
 #pragma region UFPMap Definitions
 
-// Constructs the struct FunctionPointerAlias { std::string FAlias; void(*FPointer)(const void*, void*); };
-UserEvents::FunctionPointerAlias UserEvents::MakeFPAlias(std::string FAlias, void(UserEvents::*FPointer)(const void *, void *))
-{
-	FunctionPointerAlias Return = { FAlias, FPointer };
-	return Return;
-}
-
 // Builds the UserFunctionPointerAliasMap
 void UserEvents::BuildUFPAliasMap()
 {
-	UFPAliasMap.push_back(MakeFPAlias("Add", &UserEvents::Add));
+	UFPAliasMap.push_back(FunctionPointerAlias {"Add", &UserEvents::Add});
 	UFPAliasMap.shrink_to_fit();
 }
 #pragma endregion

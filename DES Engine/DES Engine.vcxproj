@@ -140,11 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DESEngine.cpp" />
+    <ClCompile Include="GlobalVariables.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="UserEvents.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DESEngine.h" />
+    <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="UserEvents.h" />
   </ItemGroup>

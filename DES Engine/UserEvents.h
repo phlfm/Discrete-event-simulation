@@ -16,10 +16,7 @@ public:
 
 	// Here we have a vector that assigns an alias (string) to each User Function (pointer)
 	std::vector<FunctionPointerAlias> UFPAliasMap;
-
-	// Constructs the struct FunctionPointerAlias { std::string FAlias; void(*FPointer)(const void*, void*); };
-	FunctionPointerAlias MakeFPAlias(std::string FAlias, void(UserEvents::*FPointer)(const void*, void*));
-
+	
 	// Class constructor / destructor
 	UserEvents();
 	~UserEvents();
