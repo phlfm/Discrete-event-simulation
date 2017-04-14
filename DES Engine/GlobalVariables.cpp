@@ -11,9 +11,10 @@ GlobalVariables::GlobalVariables()
 
 }
 
-
+// TODO: GlobalVariables Destructor
 GlobalVariables::~GlobalVariables()
 {
+
 }
 
 void GlobalVariables::ClearAllVariables()
@@ -39,6 +40,20 @@ boost::any const	GlobalVariables::VarGet(const std::string Key, const boost::any
 	{
 		return DefaultNotFound;
 	}
+}
+
+void GlobalVariables::VarDel(const std::string Key)
+{
+	try
+	{
+		VarMap.erase(Key);
+	}
+	catch (const std::out_of_range e)
+	{
+
+	}
+
+	return;
 }
 
 // DANGEROUS - I don't know what happens when you edit the contents a pointer that is a boost::any, specially as a void*

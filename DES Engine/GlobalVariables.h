@@ -20,6 +20,7 @@ public:
 
 	void				  VarSet(const std::string Key, const boost::any Value);
 	boost::any		const VarGet(const std::string Key, const boost::any DefaultNotFound = 0);
+	void				  VarDel(const std::string Key);
 
 	// DANGEROUS - I don't know what happens when you edit the contents of this pointer that is a boost::any
 	void*			const VarGet_ptr(const std::string Key);
