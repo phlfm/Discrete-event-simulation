@@ -74,23 +74,23 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 	cout << endl << "Nombre type: "	<< (GV.VarGet_Type("Nombre"));
 
 	// Print out some variables
-	cout << endl << boost::any_cast<std::string>(GV.VarGet("Nombre")) << ", A/B is:";
-	cout << endl << "fC = " << boost::any_cast<float>(GV.VarGet("fC")) << "\n\n";
+	cout << endl << GV.VarGet_String("Nombre") << ", A/B is: ";
+	cout << "fC = " << GV.VarGet_Float("fC") << "\n\n";
 
 	// Change variable types (int -> float) (int -> string)
-	GV.VarSet("iA", (float)(boost::any_cast<float>(GV.VarGet("fC"))*3.1415926));
-	GV.VarSet("iB", (std::string)"*STRING SUPIMPA*");
+	GV.VarSet("iA", GV.VarGet_Float("fC")*3.1415926);
+	GV.VarSet("iB", "*STRING SUPIMPA*");
 
 	// Check their new types
 	cout << endl << "Novo iA type: " << GV.VarGet_Type("iA");
 	cout << endl << "Novo iB type: " << GV.VarGet_Type("iB");
 
 	// Print out new values
-	cout << endl << "Novo iA = iC*pi = " << boost::any_cast<float>(GV.VarGet("iA"));
-	cout << endl << "Novo iB: " << boost::any_cast<std::string>(GV.VarGet("iB"));
+	cout << endl << "Novo iA = fC*pi = " << GV.VarGet_Float("iA");
+	cout << endl << "Novo iB: " << GV.VarGet_String("iB");
 
 	// Access inexistent element
-	cout << endl << "Acessando elemento inexistente: TIPO:" << GV.VarGet("!@#", -1.2345).type().name() << "\nValor: " << boost::any_cast<double>(GV.VarGet("!@#", -1.2345)) << endl;
+	cout << endl << "\n\nAcessando elemento inexistente:\nTipo: " << GV.VarGet("").type().name() << "\nValor: " << GV.VarGet_Int("") << endl;
 
 }
 
