@@ -1,15 +1,19 @@
 #pragma once
-#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
 class TextParser
 {
 public:
+	TextParser(std::string Filename);
 	TextParser();
 	~TextParser();
 
-private:
+	void LoadFileLines(std::string Filename);
 
+private:
+	// flin = File Lines
+	std::vector<std::string> flin;
 };
 
