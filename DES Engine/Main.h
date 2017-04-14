@@ -7,4 +7,4 @@
 
 int main();
 
-void CallUserFunctionADD(UserEvents &UsrEvt);
+void TEST_UserFunctionADD(UserEvents &UsrEvt);

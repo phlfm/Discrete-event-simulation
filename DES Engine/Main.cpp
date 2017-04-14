@@ -16,14 +16,15 @@ int main()
 
 	UserEvents UsrEvt = UserEvents();
 
-	CallUserFunctionADD(UsrEvt);
+	//TEST_UserFunctionADD(UsrEvt);
+
 
 	system("pause");
 
 	return 0;
 }
 
-void CallUserFunctionADD(UserEvents &UsrEvt)
+void TEST_UserFunctionADD(UserEvents &UsrEvt)
 {
 	int A[2];
 	int Result;
@@ -36,7 +37,7 @@ void CallUserFunctionADD(UserEvents &UsrEvt)
 	std::cin >> A[1];
 	cout << endl;
 
-	UsrEvt.Choose("Add", A, &Result);
+	UsrEvt.Choose(EventAlias, A, &Result);
 
 	cout << "A+B = " << Result << endl;
 }

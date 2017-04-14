@@ -12,22 +12,24 @@ class UserEvents
 {
 	
 public:
-	struct FunctionPointerAlias { std::string FAlias; void(UserEvents::*FPointer)(const void*, void*); };
-
-	// Here we have a vector that assigns an alias (string) to each User Function (pointer)
-	std::vector<FunctionPointerAlias> UFPAliasMap;
 	
 	// Class constructor / destructor
 	UserEvents();
 	~UserEvents();
-
-	void BuildUFPAliasMap();
 
 	// Select which function(parameters) to call depending on event alias and returns ReturnValue
 	int Choose(const std::string Alias, const void *Parameters, void *ReturnValue);
 
 
 private:
+
+	// struct {"Alias", void Function*(void*, void*)}
+	struct FunctionPointerAlias { std::string FAlias; void(UserEvents::*FPointer)(const void*, void*); };
+
+	// Here we have a vector that assigns an alias (string) to each User Function (pointer)
+	std::vector<FunctionPointerAlias> UFPAliasMap;
+
+	void BuildUFPAliasMap();
 
 	void Add(const void *Parameters, void *ReturnValue);
 };
