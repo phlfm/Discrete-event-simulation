@@ -21,7 +21,7 @@ UserEvents::~UserEvents()
 // Returns i when alias is found, -1 if not found
 int UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
 {
-	for (int i = 0; i < UFPAliasMap.size(); i++)
+	for (unsigned int i = 0; i < UFPAliasMap.size(); i++)
 	{
 		if (Alias == UFPAliasMap[i].FAlias)
 		{

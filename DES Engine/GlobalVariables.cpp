@@ -2,8 +2,9 @@
 
 
 
-GlobalVariables::GlobalVariables()
+GlobalVariables::GlobalVariables(unsigned int Size)
 {
+
 }
 
 

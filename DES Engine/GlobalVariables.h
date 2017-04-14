@@ -2,9 +2,10 @@
 class GlobalVariables
 {
 public:
-	GlobalVariables();
+	GlobalVariables(unsigned int Size);
 	~GlobalVariables();
 
+private: 
 
 };
 
