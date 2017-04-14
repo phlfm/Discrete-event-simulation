@@ -3,10 +3,13 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #pragma once
-#include <iostream>
 #include "UserEvents.h"
 #include "boost/any.hpp"
 #include "GlobalVariables.h"
+
+// Includes for Test Funcions
+#include <iostream>
+#include <string>
 
 
 

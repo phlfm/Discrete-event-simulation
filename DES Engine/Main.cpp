@@ -6,10 +6,6 @@
 #include "Main.h"
 
 
-using std::endl;
-using std::cout;
-using std::cin;
-
 int main()
 {
 
@@ -28,6 +24,10 @@ int main()
 
 void TEST_UserFunctionADD(UserEvents &UsrEvt)
 {
+	using std::endl;
+	using std::cout;
+	using std::cin;
+
 	int A[2];
 	int Result;
 	std::string EventAlias = "Add";
@@ -46,7 +46,9 @@ void TEST_UserFunctionADD(UserEvents &UsrEvt)
 
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 {
-#include <string>
+	using std::endl;
+	using std::cout;
+	using std::cin;
 
 	int A[2];
 	std::string Name;
