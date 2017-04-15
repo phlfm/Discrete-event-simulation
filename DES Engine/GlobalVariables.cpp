@@ -28,6 +28,7 @@ void GlobalVariables::VarSet(const std::string Key, const boost::any Value)
 	VarMap.insert_or_assign(Key, Value);
 	return;
 }
+
 #pragma region Getters
 
 boost::any const	GlobalVariables::VarGet(const std::string Key, const boost::any DefaultNotFound)
@@ -233,6 +234,4 @@ double const		GlobalVariables::VarGet_Double(const std::string Key, double Defau
 	}
 }
 
-#pragma endregion
-
-
+#pragma endregion Global Variable Getters in different formats

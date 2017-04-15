@@ -12,9 +12,11 @@ int main()
 
 	UserEvents UsrEvt = UserEvents();
 	GlobalVariables GlobVar = GlobalVariables();
+	TextParser TxtPar = TextParser();
 
 	//TEST_UserFunctionADD(UsrEvt);
-	TEST_GlobalVariableSetGetType(GlobVar);
+	//TEST_GlobalVariableSetGetType(GlobVar);
+	TEST_TextParser(TxtPar);
 
 
 	system("pause");
@@ -22,6 +24,9 @@ int main()
 	return 0;
 }
 
+#pragma region Test Functions
+
+// Tests UserEvents Class
 void TEST_UserFunctionADD(UserEvents &UsrEvt)
 {
 	using std::endl;
@@ -44,6 +49,7 @@ void TEST_UserFunctionADD(UserEvents &UsrEvt)
 	cout << "A+B = " << Result << endl;
 }
 
+// Tests GlobalVariables Class
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 {
 	using std::endl;
@@ -96,3 +102,32 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 
 }
 
+// Tests TextParser Class
+void TEST_TextParser(TextParser &TP)
+{
+	using std::endl;
+	using std::cout;
+	using std::cin;
+
+	std::string Filename;
+	do
+	{
+		cout << "Enter filename: ";
+		std::getline(cin >> std::ws, Filename);
+		cout << endl << endl;
+	} while (!(TP.FileLoadLines(Filename.c_str())==0));
+
+	cout << "Printing File: " << Filename << endl;
+	cout << "Line number: " << TP.FileLineCount() << endl;
+	cout << "--------------- BOF ---------------\n\n";
+	
+	for (int i = 0; i < TP.FileLineCount(); i++)
+	{
+		cout << i << ": " << TP.FileGetLine(i) << endl;
+	}
+
+	cout << "\n\n--------------- EOF ---------------\n\n\n";
+}
+
+
+#pragma endregion Functions to test different Classes

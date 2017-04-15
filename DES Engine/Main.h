@@ -3,18 +3,23 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #pragma once
-#include "UserEvents.h"
 #include "boost/any.hpp"
 #include "GlobalVariables.h"
+#include "UserEvents.h"
+#include "TextParser.h"
+
+int main();
+
+#pragma region Test Functions
 
 // Includes for Test Funcions
 #include <iostream>
 #include <string>
 
-
-
-int main();
-
 void TEST_UserFunctionADD(UserEvents &UsrEvt);
 
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV);
+
+void TEST_TextParser(TextParser &TP);
+
+#pragma endregion

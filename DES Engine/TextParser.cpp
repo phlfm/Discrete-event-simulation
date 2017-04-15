@@ -1,9 +1,13 @@
+// Project for "PCS3216 - Programming Systems"
+// Polytechnic School of the University of Sao Paulo
+// Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
+
 #include "TextParser.h"
 
 
-TextParser::TextParser(std::string Filename)
+TextParser::TextParser(const char* Filename)
 {
-	LoadFileLines(Filename);
+	FileLoadLines(Filename);
 }
 
 TextParser::TextParser()
@@ -14,13 +18,23 @@ TextParser::~TextParser()
 {
 }
 
-void TextParser::LoadFileLines(std::string Filename)
+unsigned int TextParser::FileLineCount()
 {
-	std::ifstream file(Filename);
+	return flin.size();
+}
+
+std::string TextParser::FileGetLine(unsigned int LineNumber)
+{
+	return flin.at(LineNumber);
+}
+
+int TextParser::FileLoadLines(const char* Filename)
+{
+	std::ifstream file(Filename, std::ifstream::in);
 	std::string str;
 
-	// Is this if condition correct?
-	if (!file && !file.good()) { throw std::ios_base::failure("File could not be opened"); return; }
+	// Checks for "fail" and "bad"
+	if (!file) { return 1; }
 
 	flin.clear();
 
@@ -31,5 +45,7 @@ void TextParser::LoadFileLines(std::string Filename)
 
 	file.close();
 
-	return;
+	flin.shrink_to_fit();
+
+	return 0;
 }

@@ -1,3 +1,7 @@
+// Project for "PCS3216 - Programming Systems"
+// Polytechnic School of the University of Sao Paulo
+// Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
+
 #pragma once
 #include <fstream>
 #include <string>
@@ -6,14 +10,24 @@
 class TextParser
 {
 public:
-	TextParser(std::string Filename);
+	TextParser(const char* Filename);
 	TextParser();
 	~TextParser();
 
-	void LoadFileLines(std::string Filename);
+	// Opens, reads and retrieves file lines
+	// return	0: read ok
+	//			1: could not open stream
+	int FileLoadLines(const char* Filename);
+
+	// Returns the total line count
+	unsigned int FileLineCount();
+
+	// LineNumber goes from [0, FileLineCount - 1]
+	std::string FileGetLine(unsigned int LineNumber);
 
 private:
 	// flin = File Lines
 	std::vector<std::string> flin;
+
 };
 
