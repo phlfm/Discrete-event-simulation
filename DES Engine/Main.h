@@ -20,6 +20,6 @@ void TEST_UserFunctionADD(UserEvents &UsrEvt);
 
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV);
 
-void TEST_TextParser(TextParser &TP);
+void TEST_TextParser_PrintFile(TextParser &TP);
 
 #pragma endregion

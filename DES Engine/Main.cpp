@@ -103,7 +103,7 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 }
 
 // Tests TextParser Class
-void TEST_TextParser(TextParser &TP)
+void TEST_TextParser_PrintFile(TextParser &TP)
 {
 	using std::endl;
 	using std::cout;

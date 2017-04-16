@@ -5,7 +5,7 @@
 #include "TextParser.h"
 
 
-TextParser::TextParser(const char* Filename)
+TextParser::TextParser(const char *Filename)
 {
 	FileLoadLines(Filename);
 }
@@ -23,12 +23,51 @@ unsigned int TextParser::FileLineCount()
 	return flin.size();
 }
 
-std::string TextParser::FileGetLine(unsigned int LineNumber)
+std::string TextParser::FileGetLine(const unsigned int LineNumber)
 {
 	return flin.at(LineNumber);
 }
 
-int TextParser::FileLoadLines(const char* Filename)
+
+// Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
+void TextParser::GetEventList(std::vector<std::string, std::vector<boost::any>> *EventList)
+{
+// FLIN should be: COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+	// Loop Lines of FLIN
+		// Break line into spaces
+
+		// Get and Store COMMAND block
+
+		// Loop Parameters
+			// If(Param == Comment)
+				// IGNORE Rest of Param; next line
+			// NOT(Comment)
+				// If(Param == pre-defined) 	(c%, i%, ui%, l%, ul%, f%, d%)
+					// Store Parameter
+				// NOT(Pre-defined)
+					// If(Param == String Param ("))
+						// Loop until ending string found (")
+						// Store string Parameter
+						// Set Param iterator to position after ending string (")
+					// NOT(String)
+						// Store char* Parameter (same as c%)
+	return;
+}
+/* Text File Symbols
+
+@	System Commands
+//	Comment
+$	Variable
+"	Delimits strings (multi lines are not supported)
+/"	
+c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
+If parameter type is not determined, treat as char*
+Each line should be:
+COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+*/
+
+
+int TextParser::FileLoadLines(const char *Filename)
 {
 	std::ifstream file(Filename, std::ifstream::in);
 	std::string str;
