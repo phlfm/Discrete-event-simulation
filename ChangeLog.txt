@@ -1,0 +1,5 @@
+2017
+	April
+		27 Thursday
+			- Minor ajustments to TextParser::FileGetLine so that it would recieve (LineNumber) starting at 1.
+			- Started implementing TextParser::GetEventList
