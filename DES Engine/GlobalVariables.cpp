@@ -65,8 +65,9 @@ void* const			GlobalVariables::VarGet_ptr(const std::string Key)
 	{
 		return &VarMap.at(Key);
 	}
-	catch (std::out_of_range const &e)
+	catch (const std::out_of_range& e)
 	{
+		(void)e;
 		return nullptr;
 	}
 }

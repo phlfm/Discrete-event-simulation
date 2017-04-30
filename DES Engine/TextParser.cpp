@@ -111,13 +111,13 @@ void TextParser::GetEventList(std::vector<std::string, std::vector<boost::any>> 
 $	Variable
 "	Delimits strings (multi lines are not supported)
 /"	
-c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
+s%, c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
 If parameter type is not determined, treat as char*
 Each line should be:
 COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
 */
 
-void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents)
+void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents, const bool AppendpS)
 {
 	///http://www.boost.org/doc/libs/1_64_0/doc/html/string_algo/usage.html#idp124639424
 
@@ -135,10 +135,10 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 		{
 			// Found first non WS (Whitespace)
 				// If the WordBlock starts with " --> It is a string
-			IfStringGetString(C, WordBlocks, Word, i, Ctrl, LineContents);
+			IfStringGetString(C, WordBlocks, Word, i, Ctrl, LineContents, AppendpS);
 
 			// Is it a comment?
-			IfCommentSetCtrl(C, LineContents, i, Ctrl, Word);
+			IfCommentSetCtrl(C, LineContents, i, Ctrl);
 
 			// Word Found --> Not string, not comment
 			if (Ctrl == 0 || Ctrl == 1)
@@ -174,9 +174,8 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 	}
 }
 
-
 #pragma region Helper Functions for GetWordBlocks
-void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents)
+void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents, const bool AppendpS)
 {
 	if (C == _Quote && Ctrl == 0)
 	{
@@ -209,6 +208,12 @@ void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks
 			// End of String
 			if (C == _Quote)
 			{
+				if (AppendpS) // Appends s% to the start of the WordBlock
+				{
+					Word.insert(Word.begin(), '%');
+					Word.insert(Word.begin(),'s');
+
+				}
 				i = j;
 				WordBlocks.push_back(std::string(Word.begin(), Word.end()));
 				Word.clear();
@@ -223,7 +228,7 @@ void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks
 	return;
 }
 
-void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl, std::vector<char> &Word)
+void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl)
 {
 	if (C == _FSlash)
 	{

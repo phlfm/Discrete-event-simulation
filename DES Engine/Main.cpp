@@ -123,7 +123,6 @@ void TEST_TextParser(TextParser &TP)
 
 }
 
-
 void TEST_TextParser_PrintFile(TextParser &TP)
 {
 	using std::endl;
@@ -153,9 +152,9 @@ void TEST_TextParser_WordBlock(TextParser &TP)
 
 	for (unsigned int i = 1; i <= TP.FileLineCount(); i++)
 	{
-		TP.GetWordBlocks(WordBlock, TP.FileGetLine(i));
+		TP.GetWordBlocks(WordBlock, TP.FileGetLine(i), true);
 
-		for (int j = 0; j < WordBlock.size(); j++)
+		for (unsigned int j = 0; j < WordBlock.size(); j++)
 		{
 			cout << i << "/" << j << ": " << WordBlock.at(j) << endl;
 		}
