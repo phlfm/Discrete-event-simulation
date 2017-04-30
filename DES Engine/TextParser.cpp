@@ -3,6 +3,14 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "TextParser.h"
+#define _HTab	9
+#define _NL		10
+#define _VTab	11
+#define _CR		13
+#define _Space	32
+#define _Quote  34
+#define _FSlash 47
+#define _BSlash 92
 
 
 TextParser::TextParser(const char *Filename)
@@ -18,57 +26,29 @@ TextParser::~TextParser()
 {
 }
 
+#pragma region Getters
 unsigned int TextParser::FileLineCount()
 {
 	return flin.size();
 }
 
+// LineNumber goes from [1, FileLineCount]
 std::string TextParser::FileGetLine(const unsigned int LineNumber)
 {
-	return flin.at(LineNumber);
+	return flin.at(LineNumber - 1);
 }
 
-
-// Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
-void TextParser::GetEventList(std::vector<std::string, std::vector<boost::any>> *EventList)
+std::string TextParser::GetFilename()
 {
-// FLIN should be: COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
-	// Loop Lines of FLIN
-		// Break line into spaces
-
-		// Get and Store COMMAND block
-
-		// Loop Parameters
-			// If(Param == Comment)
-				// IGNORE Rest of Param; next line
-			// NOT(Comment)
-				// If(Param == pre-defined) 	(c%, i%, ui%, l%, ul%, f%, d%)
-					// Store Parameter
-				// NOT(Pre-defined)
-					// If(Param == String Param ("))
-						// Loop until ending string found (")
-						// Store string Parameter
-						// Set Param iterator to position after ending string (")
-					// NOT(String)
-						// Store char* Parameter (same as c%)
-	return;
+	return TP_Filename;
 }
-/* Text File Symbols
-
-@	System Commands
-//	Comment
-$	Variable
-"	Delimits strings (multi lines are not supported)
-/"	
-c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
-If parameter type is not determined, treat as char*
-Each line should be:
-COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
-*/
+#pragma endregion
 
 
-int TextParser::FileLoadLines(const char *Filename)
+int TextParser::FileLoadLines(const std::string &Filename)
 {
+	TP_Filename = Filename;
+
 	std::ifstream file(Filename, std::ifstream::in);
 	std::string str;
 
@@ -87,4 +67,178 @@ int TextParser::FileLoadLines(const char *Filename)
 	flin.shrink_to_fit();
 
 	return 0;
+	/**
+	Returns:
+	0 = All is Good
+	1 = ifstream file = fail or bad
+	/**/
 }
+
+// Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
+void TextParser::GetEventList(std::vector<std::string, std::vector<boost::any>> *EventList)
+{
+// FLIN should be: COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+	std::string Line = "";
+
+	// Loop Lines of FLIN
+	for (unsigned int i = 1; i <= FileLineCount(); i++)
+	{
+		Line = FileGetLine(i);
+
+		// Break line into spaces
+		// Get and Store COMMAND block
+
+		// Loop Parameters
+			// If(Param == Comment)
+				// IGNORE Rest of Param; next line
+			// NOT(Comment)
+				// If(Param == pre-defined) 	(c%, i%, ui%, l%, ul%, f%, d%)
+					// Store Parameter
+				// NOT(Pre-defined)
+					// If(Param == String Param ("))
+						// Loop until ending string found (")
+						// Store string Parameter
+						// Set Param iterator to position after ending string (")
+					// NOT(String)
+						// Store char* Parameter (same as c%)
+	}
+	return;
+}
+/* Text File Symbols
+
+@	System Commands
+//	Comment
+$	Variable
+"	Delimits strings (multi lines are not supported)
+/"	
+c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
+If parameter type is not determined, treat as char*
+Each line should be:
+COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+*/
+
+void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents)
+{
+	///http://www.boost.org/doc/libs/1_64_0/doc/html/string_algo/usage.html#idp124639424
+
+	char C = 0;
+	int Ctrl = 0; // 1 = Found Word, 2 Found String, -1 = Comment
+	std::vector<char> Word;
+
+	WordBlocks.clear();
+
+	// Loop Characters of LineContents
+	for (unsigned int i = 0; i < LineContents.length(); i++)
+	{
+		C = LineContents.at(i);
+		if (!IsCharWS(C))
+		{
+			// Found first non WS (Whitespace)
+				// If the WordBlock starts with " --> It is a string
+			IfStringGetString(C, WordBlocks, Word, i, Ctrl, LineContents);
+
+			// Is it a comment?
+			IfCommentSetCtrl(C, LineContents, i, Ctrl, Word);
+
+			// Word Found --> Not string, not comment
+			if (Ctrl == 0 || Ctrl == 1)
+			{
+				Word.push_back(C);
+				Ctrl = 1;
+			}
+
+			// String end, on next loop look for more params
+			if (Ctrl == 2) { Ctrl = 0; }
+
+		}
+		else {
+			if (Ctrl == 1)
+			{
+				// Word found and new WS found --> end of Word
+				WordBlocks.push_back(std::string(Word.begin(), Word.end()));
+				Word.clear();
+				Ctrl = 0;
+			}
+			else {
+				// If found NL, CR --> Unexpected
+				if (C == _NL || C == _CR) { throw std::exception::exception("Unexpected Char"); }
+			}
+		}
+	}
+	if (Ctrl == 1)
+	{
+		// Word found and end of linecontents --> end of Word
+		WordBlocks.push_back(std::string(Word.begin(), Word.end()));
+		Word.clear();
+		Ctrl = 0;
+	}
+}
+
+
+#pragma region Helper Functions for GetWordBlocks
+void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents)
+{
+	if (C == _Quote && Ctrl == 0)
+	{
+		Ctrl = 2; // Found String
+				  // Look for end of string (")
+		for (unsigned int j = (i+1); j < LineContents.length(); j++)
+		{
+			C = LineContents.at(j);
+
+			// Escape apropriate characters
+			while (C == _BSlash)
+			{
+				// 1 2 3 4 5 6 7
+				// / / / " T X T
+				j++; C = LineContents.at(j); // j points to 1. Increment and check position 2. Add Pos(2) to Word vector.
+				j++; // Increment and point to Pos(3)
+
+					 // Escaped is \\ or \" otherwise --> error. eg: \P --> \\P
+				switch (C)
+				{
+				case _BSlash:
+					Word.push_back(C); break;
+				case _Quote:
+					Word.push_back(C); break;
+				default:
+					throw std::exception::exception("Unexpected escape character"); break;
+				}
+			}
+
+			// End of String
+			if (C == _Quote)
+			{
+				i = j;
+				WordBlocks.push_back(std::string(Word.begin(), Word.end()));
+				Word.clear();
+				break;
+			}
+
+			// Add C to string element
+			Word.push_back(C);
+
+		}
+	}
+	return;
+}
+
+void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl, std::vector<char> &Word)
+{
+	if (C == _FSlash)
+	{
+		// If we have two // in a row
+		if (LineContents.at(i+1) == _FSlash)
+		{
+			// It is a comment
+			Ctrl = -1;
+		}
+	}
+}
+
+bool TextParser::IsCharWS(const char C)
+{
+	if (C == _HTab || C == _NL || C == _VTab || C == _CR || C == _Space) { return true; }
+	return false;
+}
+#pragma endregion

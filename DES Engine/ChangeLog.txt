@@ -1,0 +1,9 @@
+2017
+	April
+		27 Thursday
+			- Minor ajustments to TextParser::FileGetLine so that it would recieve (LineNumber) starting at 1.
+			- Started implementing TextParser::GetEventList
+		29 Saturday
+			- TextParser::GetWordBlock fully implemented and tested.
+			- Changes to Main TextParser Test Functions
+			- Changes to other functions of TextParser

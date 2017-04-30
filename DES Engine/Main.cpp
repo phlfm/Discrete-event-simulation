@@ -17,6 +17,9 @@ int main()
 	//TEST_UserFunctionADD(UsrEvt);
 	//TEST_GlobalVariableSetGetType(GlobVar);
 	TEST_TextParser(TxtPar);
+	TEST_TextParser_PrintFile(TxtPar);
+	TEST_TextParser_WordBlock(TxtPar);
+
 
 
 	system("pause");
@@ -103,7 +106,8 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 }
 
 // Tests TextParser Class
-void TEST_TextParser_PrintFile(TextParser &TP)
+// Makes TextParser ready for action
+void TEST_TextParser(TextParser &TP)
 {
 	using std::endl;
 	using std::cout;
@@ -115,18 +119,50 @@ void TEST_TextParser_PrintFile(TextParser &TP)
 		cout << "Enter filename: ";
 		std::getline(cin >> std::ws, Filename);
 		cout << endl << endl;
-	} while (!(TP.FileLoadLines(Filename.c_str())==0));
+	} while (!(TP.FileLoadLines(Filename) == 0));
 
-	cout << "Printing File: " << Filename << endl;
+}
+
+
+void TEST_TextParser_PrintFile(TextParser &TP)
+{
+	using std::endl;
+	using std::cout;
+	
+	std::string Filename = TP.GetFilename();
+	cout << "Printing File: " << TP.GetFilename() << endl;
 	cout << "Line number: " << TP.FileLineCount() << endl;
 	cout << "--------------- BOF ---------------\n\n";
 	
-	for (int i = 0; i < TP.FileLineCount(); i++)
+	for (unsigned int i = 1; i <= TP.FileLineCount(); i++)
 	{
 		cout << i << ": " << TP.FileGetLine(i) << endl;
 	}
 
 	cout << "\n\n--------------- EOF ---------------\n\n\n";
+}
+
+void TEST_TextParser_WordBlock(TextParser &TP)
+{
+	using std::endl;
+	using std::cout;
+	
+	std::vector<std::string> WordBlock;
+
+	cout << "\n\n--------------- Word Block ---------------\n\n\n";
+
+	for (unsigned int i = 1; i <= TP.FileLineCount(); i++)
+	{
+		TP.GetWordBlocks(WordBlock, TP.FileGetLine(i));
+
+		for (int j = 0; j < WordBlock.size(); j++)
+		{
+			cout << i << "/" << j << ": " << WordBlock.at(j) << endl;
+		}
+		cout << endl;
+	}
+
+	cout << "\n\n--------------- Word Block End ---------------\n\n\n";
 }
 
 

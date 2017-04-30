@@ -152,6 +152,9 @@
     <ClInclude Include="TextParser.h" />
     <ClInclude Include="UserEvents.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="ChangeLog.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
