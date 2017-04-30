@@ -3,17 +3,17 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "TextParser.h"
-#define _HTab	9
-#define _NL		10
-#define _VTab	11
-#define _CR		13
-#define _Space	32
-#define _Quote  34
-#define _FSlash 47
-#define _BSlash 92
+#define _HTab	9  // Horizontal Tab
+#define _NL		10 // New line or LF = line feed
+#define _VTab	11 // Vertical Tab
+#define _CR		13 // Carriage Return
+#define _Space	32 // 
+#define _Quote  34 // "
+#define _FSlash 47 // /
+#define _BSlash 92 // \
 
 
-TextParser::TextParser(const char *Filename)
+TextParser::TextParser(const std::string &Filename)
 {
 	FileLoadLines(Filename);
 }
@@ -74,48 +74,6 @@ int TextParser::FileLoadLines(const std::string &Filename)
 	/**/
 }
 
-// Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
-void TextParser::GetEventList(std::vector<std::string, std::vector<boost::any>> *EventList)
-{
-// FLIN should be: COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
-	std::string Line = "";
-
-	// Loop Lines of FLIN
-	for (unsigned int i = 1; i <= FileLineCount(); i++)
-	{
-		Line = FileGetLine(i);
-
-		// Break line into spaces
-		// Get and Store COMMAND block
-
-		// Loop Parameters
-			// If(Param == Comment)
-				// IGNORE Rest of Param; next line
-			// NOT(Comment)
-				// If(Param == pre-defined) 	(c%, i%, ui%, l%, ul%, f%, d%)
-					// Store Parameter
-				// NOT(Pre-defined)
-					// If(Param == String Param ("))
-						// Loop until ending string found (")
-						// Store string Parameter
-						// Set Param iterator to position after ending string (")
-					// NOT(String)
-						// Store char* Parameter (same as c%)
-	}
-	return;
-}
-/* Text File Symbols
-
-@	System Commands
-//	Comment
-$	Variable
-"	Delimits strings (multi lines are not supported)
-/"	
-s%, c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
-If parameter type is not determined, treat as char*
-Each line should be:
-COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
-*/
 
 void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents, const bool AppendpS)
 {
@@ -131,10 +89,9 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 	for (unsigned int i = 0; i < LineContents.length(); i++)
 	{
 		C = LineContents.at(i);
-		if (!IsCharWS(C))
+		if (!IsCharWS(C)) // Found first non WS (Whitespace)
 		{
-			// Found first non WS (Whitespace)
-				// If the WordBlock starts with " --> It is a string
+			// If the WordBlock starts with " --> It is a string
 			IfStringGetString(C, WordBlocks, Word, i, Ctrl, LineContents, AppendpS);
 
 			// Is it a comment?

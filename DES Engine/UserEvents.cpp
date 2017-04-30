@@ -7,6 +7,7 @@
 // Class Constructor
 UserEvents::UserEvents()
 {
+	//EventList.clear;
 	BuildUFPAliasMap();
 }
 
@@ -41,7 +42,50 @@ int UserEvents::Choose(const std::string Alias, const void *Parameters, void *Re
 	return -1;
 }
 
-#pragma region UFPMap Definitions
+/**
+// Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
+void UserEvents::GetEventList(const std::string &Filename, std::vector<std::string, std::vector<boost::any>> &EventList)
+{
+	// FLIN should be: COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+	std::string Line = "";
+
+	// Loop Lines of FLIN
+	for (unsigned int i = 1; i <= FileLineCount(); i++)
+	{
+		Line = FileGetLine(i);
+
+		// Break line into spaces
+		// Get and Store COMMAND block
+
+		// Loop Parameters
+		// If(Param == Comment)
+		// IGNORE Rest of Param; next line
+		// NOT(Comment)
+		// If(Param == pre-defined) 	(c%, i%, ui%, l%, ul%, f%, d%)
+		// Store Parameter
+		// NOT(Pre-defined)
+		// If(Param == String Param ("))
+		// Loop until ending string found (")
+		// Store string Parameter
+		// Set Param iterator to position after ending string (")
+		// NOT(String)
+		// Store char* Parameter (same as c%)
+	}
+	return;
+}
+/* Text File Symbols
+
+@	System Commands
+//	Comment
+$	Variable
+"	Delimits strings (multi lines are not supported)
+/"
+s%, c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
+If parameter type is not determined, treat as char*
+Each line should be:
+COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+*/
+/**/
 
 // Builds the UserFunctionPointerAliasMap
 void UserEvents::BuildUFPAliasMap()
@@ -49,9 +93,6 @@ void UserEvents::BuildUFPAliasMap()
 	UFPAliasMap.push_back(FunctionPointerAlias {"Add", &UserEvents::Add});
 	UFPAliasMap.shrink_to_fit();
 }
-#pragma endregion
-
-
 
 #pragma region UserFunctions
 

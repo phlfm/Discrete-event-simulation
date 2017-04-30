@@ -6,14 +6,13 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <boost/any.hpp>
 
 
 
 class TextParser
 {
 public:
-	TextParser(const char *Filename);
+	TextParser(const std::string &Filename);
 	TextParser();
 	~TextParser();
 
@@ -30,8 +29,6 @@ public:
 	// LineNumber goes from [1, FileLineCount]
 	std::string FileGetLine(const unsigned int LineNumber);
 
-	void TextParser::GetEventList(std::vector<std::string, std::vector<boost::any>> *EventList);
-	
 	// Returns blocks of words from LineContents where comments are ignored until the end
 	void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents, const bool AppendpS = false);
 		// eg: The quick "//brown fox" jumps //over the rabbit

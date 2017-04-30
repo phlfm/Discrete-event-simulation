@@ -15,11 +15,14 @@ int main()
 	TextParser TxtPar = TextParser();
 
 	//TEST_UserFunctionADD(UsrEvt);
+
 	//TEST_GlobalVariableSetGetType(GlobVar);
+
+	/**
 	TEST_TextParser(TxtPar);
 	TEST_TextParser_PrintFile(TxtPar);
 	TEST_TextParser_WordBlock(TxtPar);
-
+	/**/
 
 
 	system("pause");
