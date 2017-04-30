@@ -14,7 +14,7 @@ int main()
 	GlobalVariables GlobVar = GlobalVariables();
 	TextParser TxtPar = TextParser();
 
-	//TEST_UserFunctionADD(UsrEvt);
+	TEST_UserFunctionADD(UsrEvt);
 
 	//TEST_GlobalVariableSetGetType(GlobVar);
 

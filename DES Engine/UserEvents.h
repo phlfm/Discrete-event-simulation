@@ -27,13 +27,10 @@ public:
 
 private:
 
-	// struct {"Alias", void Function*(void*, void*)}
-	struct FunctionPointerAlias { std::string FAlias; void(UserEvents::*FPointer)(const void*, void*); };
+	//std::vector<std::string, boost::any> EventList;
 
-	std::unordered_map <std::string, boost::any> EventList;
-
-	// Here we have a vector that assigns an alias (string) to each User Function (pointer)
-	std::vector<FunctionPointerAlias> UFPAliasMap;
+	// Here we have an unordered map that assigns User Function (pointer) to each Key (string / Alias / Event Name)
+	std::unordered_map<std::string, void(UserEvents::*)(const void*, void*)> UFPAliasMap;
 
 	void BuildUFPAliasMap();
 
