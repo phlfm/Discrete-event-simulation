@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <boost/any.hpp>
 #include <unordered_map>
+#include "TextParser.h"
 
 
 
@@ -20,14 +21,17 @@ public:
 	UserEvents();
 	~UserEvents();
 
+	struct EventWithParams { std::string EventName; std::vector<boost::any> EventParams; };
+	std::vector<EventWithParams> EventList;
+
 	// Select which function(parameters) to call depending on event alias and returns ReturnValue
 	int Choose(const std::string Alias, const void *Parameters, void *ReturnValue);
 
-	//void UserEvents::GetEventList(const std::string &Filename, std::vector<std::string, std::vector<boost::any>> &EventList);
+	void UserEvents::GetEventList(const std::string &Filename);
 
 private:
 
-	//std::vector<std::string, boost::any> EventList;
+	void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams);
 
 	// Here we have an unordered map that assigns User Function (pointer) to each Key (string / Alias / Event Name)
 	std::unordered_map<std::string, void(UserEvents::*)(const void*, void*)> UFPAliasMap;

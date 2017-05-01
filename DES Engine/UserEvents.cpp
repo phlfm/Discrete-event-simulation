@@ -18,67 +18,137 @@ UserEvents::~UserEvents()
 }
 
 // Select which function(parameters) to call depending on event alias and returns ReturnValue
-// Returns i when alias is found, -1 if not found
+// Returns 0 = UserFunction, 1 = SystemFunction, -1 if no function found
 int UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
 {
+	// TODO: Treat exception if alias doesnt exist
 	(this->*UFPAliasMap.at(Alias))(Parameters, ReturnValue);
 	
 	//TODO: What do if no alias is found?
-	return -1;
+	return 0;
 }
 
-/**
+/**/
 // Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
-void UserEvents::GetEventList(const std::string &Filename, std::vector<std::string, std::vector<boost::any>> &EventList)
+void UserEvents::GetEventList(const std::string &Filename)
 {
-	// FLIN should be: COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
-	std::string Line = "";
+	// Get File lines and line count
+	TextParser TP(Filename);
+	unsigned int fLineCount = TP.GetLineCount();
+
+	// Variables used in the loop
+	std::string				 Line = "";
+	std::vector<std::string> WordBlocks;
+	std::string				 EventName;
+	std::vector<boost::any>  EvtParams;
+
+	EventList.clear();
 
 	// Loop Lines of FLIN
-	for (unsigned int i = 1; i <= FileLineCount(); i++)
+	for (unsigned int i = 1; i <= fLineCount; i++)
 	{
-		Line = FileGetLine(i);
+		Line = TP.GetLine(i);
+		TP.GetWordBlocks(WordBlocks, Line, true); // Because of how ExtractEventParameter, Append%s should be optional
 
-		// Break line into spaces
-		// Get and Store COMMAND block
+		EvtParams.clear();
+		// Get event parameters by looping WordBlocks from 1 to size-1
+		for (unsigned j = 1; j < WordBlocks.size(); j++)
+		{
+			// Extracts the next Event Parameter appropriately
+			ExtractEventParameter(WordBlocks.at(j), EvtParams);
+		}
 
-		// Loop Parameters
-		// If(Param == Comment)
-		// IGNORE Rest of Param; next line
-		// NOT(Comment)
-		// If(Param == pre-defined) 	(c%, i%, ui%, l%, ul%, f%, d%)
-		// Store Parameter
-		// NOT(Pre-defined)
-		// If(Param == String Param ("))
-		// Loop until ending string found (")
-		// Store string Parameter
-		// Set Param iterator to position after ending string (")
-		// NOT(String)
-		// Store char* Parameter (same as c%)
+		// Get event name
+		if (WordBlocks.size() > 0)
+		{
+			EventName = WordBlocks.at(0);
+			EventList.push_back({ EventName, EvtParams });
+		}
+
 	}
+
+	//delete &TP;
 	return;
 }
-/* Text File Symbols
 
-@	System Commands
-//	Comment
-$	Variable
-"	Delimits strings (multi lines are not supported)
-/"
-s%, c%, i%, ui%, l%, ul%, f%, d%	determines the parameter type
-If parameter type is not determined, treat as char*
-Each line should be:
-COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
-*/
-/**/
+// Extracts the corresponding Event Parameters
+// Warning: "Ruins" the contents of WordBlock
+void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams)
+{
+	// Pre-Parameter Identifiers:
+		// s%, i%, l%, u%, f%, d%
+		// string, int, long, unsigned long, float, double
+		// s% is optional because it's the default action
+
+	boost::any Param;
+
+	// Find % mark in second position
+	if (WordBlock.length() > 2)
+	{
+		if (WordBlock.at(1) == '%') // % mark is @ second position
+		{
+			char CaseChar = WordBlock.at(0);
+
+			switch (CaseChar)
+			{
+				case 'i':
+					WordBlock.erase(0, 2); // Erases the identifier  i%
+					Param = std::stoi(WordBlock);
+					break;
+				case 'l':
+					WordBlock.erase(0, 2); // Erases the identifier  l%
+					Param = std::stol(WordBlock);
+					break;
+				case 'u':
+					WordBlock.erase(0, 2); // Erases the identifier  u%
+					Param = std::stoul(WordBlock);
+					break;
+				case 'f':
+					WordBlock.erase(0, 2); // Erases the identifier  f%
+					Param = std::stof(WordBlock);
+					break;
+				case 'd':
+					WordBlock.erase(0, 2); // Erases the identifier  d%
+					Param = std::stod(WordBlock);
+					break;
+				case 's':
+					WordBlock.erase(0, 2); // Erases the identifier  s%
+					Param = WordBlock;
+					break;
+				default:
+					// If it doesn't have a pre-param-identifier treat as string
+					Param = WordBlock;
+					break;
+			}
+
+			EvtParams.push_back(Param);
+			return;
+		}
+	}
+
+	// If we reach this point of code that's because:
+		// WordBlock.length < 2
+		// OR WordBlock.at(1) != '%' so it doesn't return from function
+	// So we treat it as string:
+	Param = WordBlock;
+	EvtParams.push_back(Param);
+	return;
+}
 
 // Builds the UserFunctionPointerAliasMap
 void UserEvents::BuildUFPAliasMap()
 {
-	UFPAliasMap.insert_or_assign("Add", &UserEvents::Add);
+	// If UserFunctions use the same alias as system functions, they will be overwritten.
+	// For this reason don't start user function aliases with @
+
+	// Add user functions below:
+	UFPAliasMap.insert({ "ADD", &UserEvents::Add });
+
+	// System Functions below:
+	//UFPAliasMap.insert_or_assign("Add", &UserEvents::Add);
 }
 
-#pragma region UserFunctions
+#pragma region User Functions
 
 // User must modify void UserEvents::BuildUFPAliasMap()
 void UserEvents::Add(const void *Parameters, void *ReturnValue)
@@ -96,3 +166,34 @@ void UserEvents::Add(const void *Parameters, void *ReturnValue)
 
 #pragma endregion Implementation of User Functions
 
+#pragma region System Functions
+
+//void UserEvents::Add(const void *Parameters, void *ReturnValue)
+//{
+//	int *A = (int*)Parameters;
+//	int *B = A;
+//	B++;
+//
+//	int *C = (int*)ReturnValue;
+//	*C = *A + *B;
+//
+//	//memcpy(ReturnValue, &C, sizeof(int));
+//	return;
+//}
+
+#pragma endregion Implementation of System Functions
+
+
+/* Text File Symbols
+
+@	System Commands
+//	Comment
+$	Variable
+"	Delimits strings (multi lines are not supported)
+/"
+i%, l%, u%, f%, d%, (optional) s%	determines the parameter type
+If parameter type is not determined, treat as string
+Each line should be:
+COMMAND i%PARAM1 f%PARAM2 "Param 3" PARAM4 ...
+*/
+/**/

@@ -15,7 +15,7 @@
 
 TextParser::TextParser(const std::string &Filename)
 {
-	FileLoadLines(Filename);
+	LoadLines(Filename);
 }
 
 TextParser::TextParser()
@@ -27,13 +27,13 @@ TextParser::~TextParser()
 }
 
 #pragma region Getters
-unsigned int TextParser::FileLineCount()
+unsigned int TextParser::GetLineCount()
 {
 	return flin.size();
 }
 
-// LineNumber goes from [1, FileLineCount]
-std::string TextParser::FileGetLine(const unsigned int LineNumber)
+// LineNumber goes from [1, GetLineCount]
+std::string TextParser::GetLine(const unsigned int LineNumber)
 {
 	return flin.at(LineNumber - 1);
 }
@@ -45,7 +45,7 @@ std::string TextParser::GetFilename()
 #pragma endregion
 
 
-int TextParser::FileLoadLines(const std::string &Filename)
+int TextParser::LoadLines(const std::string &Filename)
 {
 	TP_Filename = Filename;
 

@@ -14,7 +14,8 @@ int main()
 	GlobalVariables GlobVar = GlobalVariables();
 	TextParser TxtPar = TextParser();
 
-	TEST_UserFunctionADD(UsrEvt);
+	//TEST_UserFunctionADD(UsrEvt);
+	//TEST_UserEventsEventList(UsrEvt);
 
 	//TEST_GlobalVariableSetGetType(GlobVar);
 
@@ -41,7 +42,7 @@ void TEST_UserFunctionADD(UserEvents &UsrEvt)
 
 	int A[2];
 	int Result;
-	std::string EventAlias = "Add";
+	std::string EventAlias = "ADD";
 
 	cout << "Test User Event Choose Function with Add User Function Implemented" << endl;
 	cout << "Enter an Integer A: ";
@@ -53,6 +54,28 @@ void TEST_UserFunctionADD(UserEvents &UsrEvt)
 	UsrEvt.Choose(EventAlias, A, &Result);
 
 	cout << "A+B = " << Result << endl;
+}
+
+void TEST_UserEventsEventList(UserEvents &UsrEvt)
+{
+	using std::endl;
+	using std::cout;
+	using std::cin;
+
+	UsrEvt.GetEventList("D:/EP/EvtList.txt");
+
+	for (unsigned int i = 0; i < UsrEvt.EventList.size(); i++)
+	{
+		cout << i << ": " << UsrEvt.EventList.at(i).EventName;
+		for (unsigned int j = 0; j < UsrEvt.EventList.at(i).EventParams.size(); j++)
+		{
+			//cout << " // " << boost::any_cast<int>(UsrEvt.EventList.at(i).EventParams.at(j));
+		}
+		cout << endl;
+	}
+
+
+
 }
 
 // Tests GlobalVariables Class
@@ -122,7 +145,7 @@ void TEST_TextParser(TextParser &TP)
 		cout << "Enter filename: ";
 		std::getline(cin >> std::ws, Filename);
 		cout << endl << endl;
-	} while (!(TP.FileLoadLines(Filename) == 0));
+	} while (!(TP.LoadLines(Filename) == 0));
 
 }
 
@@ -133,12 +156,12 @@ void TEST_TextParser_PrintFile(TextParser &TP)
 	
 	std::string Filename = TP.GetFilename();
 	cout << "Printing File: " << TP.GetFilename() << endl;
-	cout << "Line number: " << TP.FileLineCount() << endl;
+	cout << "Line number: " << TP.GetLineCount() << endl;
 	cout << "--------------- BOF ---------------\n\n";
 	
-	for (unsigned int i = 1; i <= TP.FileLineCount(); i++)
+	for (unsigned int i = 1; i <= TP.GetLineCount(); i++)
 	{
-		cout << i << ": " << TP.FileGetLine(i) << endl;
+		cout << i << ": " << TP.GetLine(i) << endl;
 	}
 
 	cout << "\n\n--------------- EOF ---------------\n\n\n";
@@ -153,9 +176,9 @@ void TEST_TextParser_WordBlock(TextParser &TP)
 
 	cout << "\n\n--------------- Word Block ---------------\n\n\n";
 
-	for (unsigned int i = 1; i <= TP.FileLineCount(); i++)
+	for (unsigned int i = 1; i <= TP.GetLineCount(); i++)
 	{
-		TP.GetWordBlocks(WordBlock, TP.FileGetLine(i), true);
+		TP.GetWordBlocks(WordBlock, TP.GetLine(i), true);
 
 		for (unsigned int j = 0; j < WordBlock.size(); j++)
 		{

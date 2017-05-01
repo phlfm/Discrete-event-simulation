@@ -7,6 +7,7 @@
 #include "GlobalVariables.h"
 #include "UserEvents.h"
 #include "TextParser.h"
+#include <boost/any.hpp>
 
 int main();
 
@@ -17,6 +18,7 @@ int main();
 #include <string>
 
 void TEST_UserFunctionADD(UserEvents &UsrEvt);
+void TEST_UserEventsEventList(UserEvents &UsrEvt);
 
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV);
 

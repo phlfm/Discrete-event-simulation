@@ -19,15 +19,15 @@ public:
 	// Opens, reads and retrieves file lines
 	// return	0: read ok
 	//			1: could not open stream
-	int FileLoadLines(const std::string &Filename);
+	int LoadLines(const std::string &Filename);
 
 	// Returns the total line count
-	unsigned int FileLineCount();
+	unsigned int GetLineCount();
 
 	std::string TextParser::GetFilename();
 
-	// LineNumber goes from [1, FileLineCount]
-	std::string FileGetLine(const unsigned int LineNumber);
+	// LineNumber goes from [1, GetLineCount]
+	std::string GetLine(const unsigned int LineNumber);
 
 	// Returns blocks of words from LineContents where comments are ignored until the end
 	void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents, const bool AppendpS = false);
