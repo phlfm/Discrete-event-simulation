@@ -9,6 +9,7 @@
 #include <boost/any.hpp>
 #include <unordered_map>
 #include "TextParser.h"
+#include "GlobalVariables.h"
 
 
 
@@ -18,11 +19,13 @@ class UserEvents
 public:
 	
 	// Class constructor / destructor
-	UserEvents();
+	UserEvents(GlobalVariables &GV);
 	~UserEvents();
 
 	struct EventWithParams { std::string EventName; std::vector<boost::any> EventParams; };
 	std::vector<EventWithParams> EventList;
+
+	GlobalVariables *GlobalVar;
 
 	// Select which function(parameters) to call depending on event alias and returns ReturnValue
 	int Choose(const std::string Alias, const void *Parameters, void *ReturnValue);

@@ -10,12 +10,12 @@ int main()
 {
 
 
-	UserEvents UsrEvt = UserEvents();
-	GlobalVariables GlobVar = GlobalVariables();
+	GlobVar = GlobalVariables();
+	UserEvents UsrEvt = UserEvents(GlobVar);
 	TextParser TxtPar = TextParser();
 
 	//TEST_UserFunctionADD(UsrEvt);
-	//TEST_UserEventsEventList(UsrEvt);
+	TEST_UserEventsEventList(UsrEvt);
 
 	//TEST_GlobalVariableSetGetType(GlobVar);
 
@@ -25,6 +25,7 @@ int main()
 	TEST_TextParser_WordBlock(TxtPar);
 	/**/
 
+	//TEST_BoostAnyPTR();
 
 	system("pause");
 
@@ -33,50 +34,91 @@ int main()
 
 #pragma region Test Functions
 
-// Tests UserEvents Class
-void TEST_UserFunctionADD(UserEvents &UsrEvt)
+void TEST_BoostAnyPTR()
 {
-	using std::endl;
 	using std::cout;
-	using std::cin;
+	using std::endl;
 
-	int A[2];
-	int Result;
-	std::string EventAlias = "ADD";
+	boost::any Variable = 0;
+	boost::any *Varptr = &Variable;
+	cout << "Variable type: " << Variable.type().name() << " contains: " << boost::any_cast<int>(Variable) << endl << endl;
 
-	cout << "Test User Event Choose Function with Add User Function Implemented" << endl;
-	cout << "Enter an Integer A: ";
-	cin >> A[0];
-	cout << endl << "Enter another integer B: ";
-	std::cin >> A[1];
-	cout << endl;
+	*Varptr = "Pedro";
+	cout << "Variable by PTR below:\nVariable type: " << Variable.type().name() << " contains: " << (std::string)(boost::any_cast<const char*>(Variable)) << endl << endl;
 
-	UsrEvt.Choose(EventAlias, A, &Result);
+	Variable = 1000;
+	int *ptrInt = boost::any_cast<int>(&Variable);
+	cout << "*ptrInt = " << *ptrInt << "\nptrInt = " << ptrInt << "\n(int)&Variable = " << boost::any_cast<int>(&Variable) << "\n(int)*Varptr = " << boost::any_cast<int>(*Varptr) <<
+		"\n(int)Varptr = " << boost::any_cast<int*>(Varptr) << endl << endl;
 
-	cout << "A+B = " << Result << endl;
+	*ptrInt = 1111;
+	cout << "*ptrInt = " << *ptrInt << "\nptrInt = " << ptrInt << "\n(int)&Variable = " << boost::any_cast<int>(&Variable) << "\n(int)*Varptr = " << boost::any_cast<int>(*Varptr) <<
+		"\n(int)Varptr = " << boost::any_cast<int*>(Varptr) << endl << endl;
+
+
+
+	Variable = "Pedro";
+	cout << "Variable = " << (std::string)(boost::any_cast<const char*>(Variable)) << "\nptrInt contains: " << ptrInt << "\n*ptrInt contains : " << *ptrInt << endl << endl;
+
+	return;
 }
 
-void TEST_UserEventsEventList(UserEvents &UsrEvt)
-{
-	using std::endl;
-	using std::cout;
-	using std::cin;
-
-	UsrEvt.GetEventList("D:/EP/EvtList.txt");
-
-	for (unsigned int i = 0; i < UsrEvt.EventList.size(); i++)
+	#pragma region Test UserEvents Class
+	void TEST_UserFunctionADD(UserEvents &UsrEvt)
 	{
-		cout << i << ": " << UsrEvt.EventList.at(i).EventName;
-		for (unsigned int j = 0; j < UsrEvt.EventList.at(i).EventParams.size(); j++)
-		{
-			//cout << " // " << boost::any_cast<int>(UsrEvt.EventList.at(i).EventParams.at(j));
-		}
+		using std::endl;
+		using std::cout;
+		using std::cin;
+
+		int A[2];
+		int Result;
+		std::string EventAlias = "ADD";
+
+		cout << "Test User Event Choose Function with Add User Function Implemented" << endl;
+		cout << "Enter an Integer A: ";
+		cin >> A[0];
+		cout << endl << "Enter another integer B: ";
+		std::cin >> A[1];
 		cout << endl;
+
+		UsrEvt.Choose(EventAlias, A, &Result);
+
+		cout << "A+B = " << Result << endl;
 	}
 
+	void TEST_UserEventsEventList(UserEvents &UsrEvt)
+	{
+		using std::endl;
+		using std::cout;
+		using std::cin;
 
+		UsrEvt.GlobalVar->VarSet("Test", "WOOOOO");
+		UsrEvt.GlobalVar->VarSet("Name", "Pedro Mendonca");
+		UsrEvt.GetEventList("D:/EP/EvtList.txt");
 
-}
+		for (unsigned int i = 0; i < UsrEvt.EventList.size(); i++)
+		{
+			cout << i << ": " << UsrEvt.EventList.at(i).EventName;
+			//for (unsigned int j = 0; j < UsrEvt.EventList.at(i).EventParams.size(); j++)
+			//{
+			//	//cout << " // " << boost::any_cast<int>(UsrEvt.EventList.at(i).EventParams.at(j));
+			//}
+			cout << endl;
+		}
+		cout << endl << endl << "Contents of EventList(2): " << UsrEvt.EventList.at(2).EventName;
+		cout << endl << "Contents of EventList(2,0): " << (boost::any_cast<std::string>(UsrEvt.EventList.at(2).EventParams.at(0)));
+		//std::string* Test = (std::string*)GlobVar.VarGet_ptr("Name");
+		boost::any* strPtr = (boost::any_cast<boost::any*>(UsrEvt.EventList.at(2).EventParams.at(1)));
+		cout << endl << "Contents of EventList(2,1): " << (std::string)(boost::any_cast<const char*>(*strPtr)) << endl << endl;
+
+		*strPtr = "Edited by pointer ;)";
+		cout << "Editing by the pointer: " << GlobVar.VarGet_String("Name") << endl << endl;
+
+		GlobVar.VarSet("Name", "Edited by GlobVar Obj");
+		cout << "Editing by the GlobVar Obj: " << (std::string)(boost::any_cast<const char*>(*strPtr)) << endl << endl;
+	}
+	#pragma endregion
+
 
 // Tests GlobalVariables Class
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
@@ -131,64 +173,66 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 
 }
 
-// Tests TextParser Class
-// Makes TextParser ready for action
-void TEST_TextParser(TextParser &TP)
-{
-	using std::endl;
-	using std::cout;
-	using std::cin;
-
-	std::string Filename;
-	do
+	#pragma region Test Text Parser
+	// Makes TextParser ready for action
+	void TEST_TextParser(TextParser &TP)
 	{
-		cout << "Enter filename: ";
-		std::getline(cin >> std::ws, Filename);
-		cout << endl << endl;
-	} while (!(TP.LoadLines(Filename) == 0));
+		using std::endl;
+		using std::cout;
+		using std::cin;
 
-}
-
-void TEST_TextParser_PrintFile(TextParser &TP)
-{
-	using std::endl;
-	using std::cout;
-	
-	std::string Filename = TP.GetFilename();
-	cout << "Printing File: " << TP.GetFilename() << endl;
-	cout << "Line number: " << TP.GetLineCount() << endl;
-	cout << "--------------- BOF ---------------\n\n";
-	
-	for (unsigned int i = 1; i <= TP.GetLineCount(); i++)
-	{
-		cout << i << ": " << TP.GetLine(i) << endl;
-	}
-
-	cout << "\n\n--------------- EOF ---------------\n\n\n";
-}
-
-void TEST_TextParser_WordBlock(TextParser &TP)
-{
-	using std::endl;
-	using std::cout;
-	
-	std::vector<std::string> WordBlock;
-
-	cout << "\n\n--------------- Word Block ---------------\n\n\n";
-
-	for (unsigned int i = 1; i <= TP.GetLineCount(); i++)
-	{
-		TP.GetWordBlocks(WordBlock, TP.GetLine(i), true);
-
-		for (unsigned int j = 0; j < WordBlock.size(); j++)
+		std::string Filename;
+		do
 		{
-			cout << i << "/" << j << ": " << WordBlock.at(j) << endl;
-		}
-		cout << endl;
+			cout << "Enter filename: ";
+			std::getline(cin >> std::ws, Filename);
+			cout << endl << endl;
+		} while (!(TP.LoadLines(Filename) == 0));
+
 	}
 
-	cout << "\n\n--------------- Word Block End ---------------\n\n\n";
-}
+	void TEST_TextParser_PrintFile(TextParser &TP)
+	{
+		using std::endl;
+		using std::cout;
+
+		std::string Filename = TP.GetFilename();
+		cout << "Printing File: " << TP.GetFilename() << endl;
+		cout << "Line number: " << TP.GetLineCount() << endl;
+		cout << "--------------- BOF ---------------\n\n";
+
+		for (unsigned int i = 1; i <= TP.GetLineCount(); i++)
+		{
+			cout << i << ": " << TP.GetLine(i) << endl;
+		}
+
+		cout << "\n\n--------------- EOF ---------------\n\n\n";
+	}
+
+	void TEST_TextParser_WordBlock(TextParser &TP)
+	{
+		using std::endl;
+		using std::cout;
+
+		std::vector<std::string> WordBlock;
+
+		cout << "\n\n--------------- Word Block ---------------\n\n\n";
+
+		for (unsigned int i = 1; i <= TP.GetLineCount(); i++)
+		{
+			TP.GetWordBlocks(WordBlock, TP.GetLine(i), true);
+
+			for (unsigned int j = 0; j < WordBlock.size(); j++)
+			{
+				cout << i << "/" << j << ": " << WordBlock.at(j) << endl;
+			}
+			cout << endl;
+		}
+
+		cout << "\n\n--------------- Word Block End ---------------\n\n\n";
+	}
+	#pragma endregion
+
 
 
 #pragma endregion Functions to test different Classes

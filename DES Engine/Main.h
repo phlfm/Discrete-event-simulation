@@ -3,11 +3,9 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #pragma once
-#include "boost/any.hpp"
 #include "GlobalVariables.h"
 #include "UserEvents.h"
 #include "TextParser.h"
-#include <boost/any.hpp>
 
 int main();
 
@@ -16,6 +14,12 @@ int main();
 // Includes for Test Funcions
 #include <iostream>
 #include <string>
+#include "boost/any.hpp"
+#include <typeinfo>
+
+GlobalVariables GlobVar;
+
+void TEST_BoostAnyPTR();
 
 void TEST_UserFunctionADD(UserEvents &UsrEvt);
 void TEST_UserEventsEventList(UserEvents &UsrEvt);

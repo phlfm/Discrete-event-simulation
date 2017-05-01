@@ -23,7 +23,7 @@ public:
 	void				  VarDel(const std::string Key);
 
 	// DANGEROUS - I don't know what happens when you edit the contents of this pointer that is a boost::any
-	void*			const VarGet_ptr(const std::string Key);
+	boost::any*		const VarGet_ptr(const std::string Key);
 
 	std::string		const VarGet_Type	(const std::string Key);
 

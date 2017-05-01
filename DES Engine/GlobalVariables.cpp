@@ -57,9 +57,7 @@ void GlobalVariables::VarDel(const std::string Key)
 	return;
 }
 
-// DANGEROUS - I don't know what happens when you edit the contents a pointer that is a boost::any, specially as a void*
-// See: http://stackoverflow.com/questions/11246394/obtain-void-pointer-to-content-of-boostany and boost::unsafe_any_cast
-void* const			GlobalVariables::VarGet_ptr(const std::string Key)
+boost::any* const	GlobalVariables::VarGet_ptr(const std::string Key)
 {
 	try
 	{

@@ -5,8 +5,9 @@
 #include "UserEvents.h"
 
 // Class Constructor
-UserEvents::UserEvents()
+UserEvents::UserEvents(GlobalVariables &GV)
 {
+	GlobalVar = &GV;
 	//EventList.clear;
 	BuildUFPAliasMap();
 }
@@ -76,16 +77,22 @@ void UserEvents::GetEventList(const std::string &Filename)
 void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams)
 {
 	// Pre-Parameter Identifiers:
-		// s%, i%, l%, u%, f%, d%
-		// string, int, long, unsigned long, float, double
+		// s%, i%, l%, f%, d% --> %u is not working
+		// string, int, long, float, double --> unsigned long not working
 		// s% is optional because it's the default action
 
 	boost::any Param;
 
-	// Find % mark in second position
 	if (WordBlock.length() > 2)
 	{
-		if (WordBlock.at(1) == '%') // % mark is @ second position
+		// If it starts with $ it's a GlobalVariable, get GlobalVariable PTR
+		if (WordBlock.at(0) == '$')
+		{
+			WordBlock.erase(0, 1); // Erases the $
+			Param = GlobalVar->VarGet_ptr(WordBlock);
+		}
+		// If NOT GlobalVar and second char = '%' --> cast appropriate type
+		else if (WordBlock.at(1) == '%')
 		{
 			char CaseChar = WordBlock.at(0);
 
@@ -99,10 +106,10 @@ void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost
 					WordBlock.erase(0, 2); // Erases the identifier  l%
 					Param = std::stol(WordBlock);
 					break;
-				case 'u':
-					WordBlock.erase(0, 2); // Erases the identifier  u%
-					Param = std::stoul(WordBlock);
-					break;
+				//case 'u':
+				//	WordBlock.erase(0, 2); // Erases the identifier  u%
+				//	Param = std::stoul(WordBlock);
+				//	break;
 				case 'f':
 					WordBlock.erase(0, 2); // Erases the identifier  f%
 					Param = std::stof(WordBlock);
@@ -120,15 +127,17 @@ void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost
 					Param = WordBlock;
 					break;
 			}
-
-			EvtParams.push_back(Param);
-			return;
 		}
+
+		EvtParams.push_back(Param);
+		return;
 	}
+
 
 	// If we reach this point of code that's because:
 		// WordBlock.length < 2
-		// OR WordBlock.at(1) != '%' so it doesn't return from function
+		// OR WordBlock.at(1) != '%'; so it doesn't return from function
+		// OR It isn't a variable; so it doesn't return from function
 	// So we treat it as string:
 	Param = WordBlock;
 	EvtParams.push_back(Param);
