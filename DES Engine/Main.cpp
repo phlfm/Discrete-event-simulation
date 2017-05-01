@@ -14,17 +14,19 @@ int main()
 	UserEvents UsrEvt = UserEvents(GlobVar);
 	TextParser TxtPar = TextParser();
 
-	TEST_UserFunctionADD(UsrEvt);
+	/// User Events
+	//TEST_UserFunctionADD(UsrEvt);
 	//TEST_UserEventsEventList(UsrEvt);
 
+	/// Global Variable
 	//TEST_GlobalVariableSetGetType(GlobVar);
 
-	/**
-	TEST_TextParser(TxtPar);
-	TEST_TextParser_PrintFile(TxtPar);
-	TEST_TextParser_WordBlock(TxtPar);
-	/**/
+	/// Text Parser
+	//TEST_TextParser(TxtPar);
+	//TEST_TextParser_PrintFile(TxtPar);
+	//TEST_TextParser_WordBlock(TxtPar);
 
+	/// Misc
 	//TEST_BoostAnyPTR();
 
 	system("pause");
@@ -114,7 +116,6 @@ void TEST_BoostAnyPTR()
 		}
 		cout << endl << endl << "Contents of EventList(2): " << UsrEvt.EventList.at(2).EventName;
 		cout << endl << "Contents of EventList(2,0): " << (boost::any_cast<std::string>(UsrEvt.EventList.at(2).EventParams.at(0)));
-		//std::string* Test = (std::string*)GlobVar.VarGet_ptr("Name");
 		boost::any* strPtr = (boost::any_cast<boost::any*>(UsrEvt.EventList.at(2).EventParams.at(1)));
 		cout << endl << "Contents of EventList(2,1): " << (std::string)(boost::any_cast<const char*>(*strPtr)) << endl << endl;
 

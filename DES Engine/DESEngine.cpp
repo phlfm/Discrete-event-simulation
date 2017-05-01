@@ -4,12 +4,13 @@
 
 #include "DESEngine.h"
 
-
 DESEngine::DESEngine()
 {
+	GVar_System.VarSet("EvtCounter", 0);
+
 }
 
-
-DESEngine::~DESEngine()
+void DESEngine::EventList_Loop()
 {
+
 }

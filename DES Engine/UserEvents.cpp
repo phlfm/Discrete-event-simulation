@@ -23,6 +23,7 @@ UserEvents::~UserEvents()
 int UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
 {
 	// TODO: Treat exception if alias doesnt exist
+	// TODO: Change Parameters and ReturnValue to std::vector<boost::any>
 	(this->*UFPAliasMap.at(Alias))(Parameters, ReturnValue);
 	
 	//TODO: What do if no alias is found?
