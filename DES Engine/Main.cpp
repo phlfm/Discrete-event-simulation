@@ -14,8 +14,8 @@ int main()
 	UserEvents UsrEvt = UserEvents(GlobVar);
 	TextParser TxtPar = TextParser();
 
-	//TEST_UserFunctionADD(UsrEvt);
-	TEST_UserEventsEventList(UsrEvt);
+	TEST_UserFunctionADD(UsrEvt);
+	//TEST_UserEventsEventList(UsrEvt);
 
 	//TEST_GlobalVariableSetGetType(GlobVar);
 
@@ -81,9 +81,16 @@ void TEST_BoostAnyPTR()
 		std::cin >> A[1];
 		cout << endl;
 
-		UsrEvt.Choose(EventAlias, A, &Result);
+		GlobVar.VarSet("A", A[0]);
+		GlobVar.VarSet("B", A[1]);
+		
+		boost::any *Temp[2] = { GlobVar.VarGet_ptr("A"), GlobVar.VarGet_ptr("B") };
+		int B[2] = { boost::any_cast<int>(*Temp[0]), boost::any_cast<int>(*Temp[1]) };
 
-		cout << "A+B = " << Result << endl;
+		UsrEvt.Choose(EventAlias, &B, &Result);
+
+		cout << "A+B = " << Result << endl << endl;
+		return;
 	}
 
 	void TEST_UserEventsEventList(UserEvents &UsrEvt)
