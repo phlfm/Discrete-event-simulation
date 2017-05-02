@@ -9,11 +9,6 @@
 int main()
 {
 
-
-	GlobVar = GlobalVariables();
-	UserEvents UsrEvt = UserEvents(GlobVar);
-	TextParser TxtPar = TextParser();
-
 	/// User Events
 	//TEST_UserFunctionADD(UsrEvt);
 	//TEST_UserEventsEventList(UsrEvt);
@@ -64,68 +59,6 @@ void TEST_BoostAnyPTR()
 
 	return;
 }
-
-	#pragma region Test UserEvents Class
-	void TEST_UserFunctionADD(UserEvents &UsrEvt)
-	{
-		using std::endl;
-		using std::cout;
-		using std::cin;
-
-		int A[2];
-		int Result;
-		std::string EventAlias = "ADD";
-
-		cout << "Test User Event Choose Function with Add User Function Implemented" << endl;
-		cout << "Enter an Integer A: ";
-		cin >> A[0];
-		cout << endl << "Enter another integer B: ";
-		std::cin >> A[1];
-		cout << endl;
-
-		GlobVar.VarSet("A", A[0]);
-		GlobVar.VarSet("B", A[1]);
-		
-		boost::any *Temp[2] = { GlobVar.VarGet_ptr("A"), GlobVar.VarGet_ptr("B") };
-		int B[2] = { boost::any_cast<int>(*Temp[0]), boost::any_cast<int>(*Temp[1]) };
-
-		UsrEvt.Choose(EventAlias, &B, &Result);
-
-		cout << "A+B = " << Result << endl << endl;
-		return;
-	}
-
-	void TEST_UserEventsEventList(UserEvents &UsrEvt)
-	{
-		using std::endl;
-		using std::cout;
-		using std::cin;
-
-		UsrEvt.GlobalVar->VarSet("Test", "WOOOOO");
-		UsrEvt.GlobalVar->VarSet("Name", "Pedro Mendonca");
-		UsrEvt.GetEventList("D:/EP/EvtList.txt");
-
-		for (unsigned int i = 0; i < UsrEvt.EventList.size(); i++)
-		{
-			cout << i << ": " << UsrEvt.EventList.at(i).EventName;
-			//for (unsigned int j = 0; j < UsrEvt.EventList.at(i).EventParams.size(); j++)
-			//{
-			//	//cout << " // " << boost::any_cast<int>(UsrEvt.EventList.at(i).EventParams.at(j));
-			//}
-			cout << endl;
-		}
-		cout << endl << endl << "Contents of EventList(2): " << UsrEvt.EventList.at(2).EventName;
-		cout << endl << "Contents of EventList(2,0): " << (boost::any_cast<std::string>(UsrEvt.EventList.at(2).EventParams.at(0)));
-		boost::any* strPtr = (boost::any_cast<boost::any*>(UsrEvt.EventList.at(2).EventParams.at(1)));
-		cout << endl << "Contents of EventList(2,1): " << (std::string)(boost::any_cast<const char*>(*strPtr)) << endl << endl;
-
-		*strPtr = "Edited by pointer ;)";
-		cout << "Editing by the pointer: " << GlobVar.VarGet_String("Name") << endl << endl;
-
-		GlobVar.VarSet("Name", "Edited by GlobVar Obj");
-		cout << "Editing by the GlobVar Obj: " << (std::string)(boost::any_cast<const char*>(*strPtr)) << endl << endl;
-	}
-	#pragma endregion
 
 
 // Tests GlobalVariables Class

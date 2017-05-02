@@ -3,12 +3,12 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "UserEvents.h"
+#include "DESEngine.h"
 
 // Class Constructor
-UserEvents::UserEvents(GlobalVariables &GV)
+UserEvents::UserEvents(DESEngine &Engine)
 {
-	GlobalVar = &GV;
-	//EventList.clear;
+	Owner = Engine;
 	BuildUFPAliasMap();
 }
 
@@ -18,181 +18,77 @@ UserEvents::~UserEvents()
 	
 }
 
-// Select which function(parameters) to call depending on event alias and returns ReturnValue
-// Returns 0 = UserFunction, 1 = SystemFunction, -1 if no function found
-int UserEvents::Choose(const std::string Alias, const void *Parameters, void *ReturnValue)
+// Select which function(parameters) to call
+// Returns 0 = UserFunction Found, -1 and exception if no function found
+int UserEvents::Choose(const DESEngine::EventWithParams &Event)
 {
-	// TODO: Treat exception if alias doesnt exist
-	// TODO: Change Parameters and ReturnValue to std::vector<boost::any>
-	(this->*UFPAliasMap.at(Alias))(Parameters, ReturnValue);
-	
-	//TODO: What do if no alias is found?
-	return 0;
+	try
+	{
+		(this->*UserFunctionPointerAliasMap.at(Event.Name))(Event.Params);
+		return 0;
+	}
+	catch (const std::out_of_range e)
+	{
+		throw std::exception::exception("Unknown User Event");
+		return -1;
+	}
 }
 
-/**/
-// Returns an std::vector with the event list. EventList = {"add", {2, 3, *C}}
-void UserEvents::GetEventList(const std::string &Filename)
+bool const UserEvents::IsParamVariable(const boost::any & Parameter)
 {
-	// Get File lines and line count
-	TextParser TP(Filename);
-	unsigned int fLineCount = TP.GetLineCount();
+	std::string ParamStr;
 
-	// Variables used in the loop
-	std::string				 Line = "";
-	std::vector<std::string> WordBlocks;
-	std::string				 EventName;
-	std::vector<boost::any>  EvtParams;
-
-	EventList.clear();
-
-	// Loop Lines of FLIN
-	for (unsigned int i = 1; i <= fLineCount; i++)
+	// Convert Parameter to std::string
+	try
 	{
-		Line = TP.GetLine(i);
-		TP.GetWordBlocks(WordBlocks, Line, true); // Because of how ExtractEventParameter, Append%s should be optional
-
-		EvtParams.clear();
-		// Get event parameters by looping WordBlocks from 1 to size-1
-		for (unsigned j = 1; j < WordBlocks.size(); j++)
-		{
-			// Extracts the next Event Parameter appropriately
-			ExtractEventParameter(WordBlocks.at(j), EvtParams);
-		}
-
-		// Get event name
-		if (WordBlocks.size() > 0)
-		{
-			EventName = WordBlocks.at(0);
-			EventList.push_back({ EventName, EvtParams });
-		}
-
+		ParamStr = boost::any_cast<std::string>(Parameter);
 	}
-
-	//delete &TP;
-	return;
-}
-
-// Extracts the corresponding Event Parameters
-// Warning: "Ruins" the contents of WordBlock
-void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams)
-{
-	// Pre-Parameter Identifiers:
-		// s%, i%, l%, f%, d% --> %u is not working
-		// string, int, long, float, double --> unsigned long not working
-		// s% is optional because it's the default action
-
-	boost::any Param;
-
-	if (WordBlock.length() > 2)
+	catch (const boost::bad_any_cast e)
 	{
-		// If it starts with $ it's a GlobalVariable, get GlobalVariable PTR
-		if (WordBlock.at(0) == '$')
+		try
 		{
-			WordBlock.erase(0, 1); // Erases the $
-			Param = GlobalVar->VarGet_ptr(WordBlock);
+			ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
 		}
-		// If NOT GlobalVar and second char = '%' --> cast appropriate type
-		else if (WordBlock.at(1) == '%')
+		catch (const boost::bad_any_cast e)
 		{
-			char CaseChar = WordBlock.at(0);
-
-			switch (CaseChar)
-			{
-				case 'i':
-					WordBlock.erase(0, 2); // Erases the identifier  i%
-					Param = std::stoi(WordBlock);
-					break;
-				case 'l':
-					WordBlock.erase(0, 2); // Erases the identifier  l%
-					Param = std::stol(WordBlock);
-					break;
-				//case 'u':
-				//	WordBlock.erase(0, 2); // Erases the identifier  u%
-				//	Param = std::stoul(WordBlock);
-				//	break;
-				case 'f':
-					WordBlock.erase(0, 2); // Erases the identifier  f%
-					Param = std::stof(WordBlock);
-					break;
-				case 'd':
-					WordBlock.erase(0, 2); // Erases the identifier  d%
-					Param = std::stod(WordBlock);
-					break;
-				case 's':
-					WordBlock.erase(0, 2); // Erases the identifier  s%
-					Param = WordBlock;
-					break;
-				default:
-					// If it doesn't have a pre-param-identifier treat as string
-					Param = WordBlock;
-					break;
-			}
+			return false;
 		}
-
-		EvtParams.push_back(Param);
-		return;
 	}
+	// End Conversion
 
-
-	// If we reach this point of code that's because:
-		// WordBlock.length < 2
-		// OR WordBlock.at(1) != '%'; so it doesn't return from function
-		// OR It isn't a variable; so it doesn't return from function
-	// So we treat it as string:
-	Param = WordBlock;
-	EvtParams.push_back(Param);
-	return;
+	// If we reach here, that means Parameter was cast into string
+	if (ParamStr.at(0) == '$') { return true; }
+	return false;
 }
 
 // Builds the UserFunctionPointerAliasMap
 void UserEvents::BuildUFPAliasMap()
 {
-	// If UserFunctions use the same alias as system functions, they will be overwritten.
+	// If UserFunctions use the same alias as system functions, they will not be called.
 	// For this reason don't start user function aliases with @
 
 	// Add user functions below:
-	UFPAliasMap.insert({ "ADD", &UserEvents::Add });
+	UserFunctionPointerAliasMap.insert({ "ADD", &UserEvents::Add });
 
-	// System Functions below:
-	//UFPAliasMap.insert_or_assign("Add", &UserEvents::Add);
 }
 
 #pragma region User Functions
 
 // User must modify void UserEvents::BuildUFPAliasMap()
-void UserEvents::Add(const void *Parameters, void *ReturnValue)
+void UserEvents::Add(const std::vector<boost::any> &Parameters)
 {
-	int *A = (int*)Parameters;
-	int *B = A;
-	B++;
-
-	int *C = (int*)ReturnValue;
-	*C = *A + *B;
+	//int *A = (int*)Parameters;
+	//int *B = A;
+	//B++;
+	boost::any i = Parameters.at(0);
+	//int *C = (int*)ReturnValue;
+	//*C = *A + *B;
 
 	//memcpy(ReturnValue, &C, sizeof(int));
 	return;
 }
 
 #pragma endregion Implementation of User Functions
-
-#pragma region System Functions
-
-//void UserEvents::Add(const void *Parameters, void *ReturnValue)
-//{
-//	int *A = (int*)Parameters;
-//	int *B = A;
-//	B++;
-//
-//	int *C = (int*)ReturnValue;
-//	*C = *A + *B;
-//
-//	//memcpy(ReturnValue, &C, sizeof(int));
-//	return;
-//}
-
-#pragma endregion Implementation of System Functions
-
 
 /* Text File Symbols
 

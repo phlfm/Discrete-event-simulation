@@ -2,16 +2,19 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
+#ifndef USEREVENTS
+#define USEREVENTS
+
+
 #pragma once
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <typeinfo>
 #include <boost/any.hpp>
-#include <unordered_map>
-#include "TextParser.h"
-#include "GlobalVariables.h"
+// #include "DESEngine.h" --> moved to DESEngine.cpp
 
-
+class DESEngine;
 
 class UserEvents
 {
@@ -19,28 +22,27 @@ class UserEvents
 public:
 	
 	// Class constructor / destructor
-	UserEvents(GlobalVariables &GV);
+	UserEvents(DESEngine &Engine);
 	~UserEvents();
 
-	struct EventWithParams { std::string EventName; std::vector<boost::any> EventParams; };
-	std::vector<EventWithParams> EventList;
+	// Select which function(parameters) to call
+	int UserEvents::Choose(const DESEngine::EventWithParams &Event);
 
-	GlobalVariables *GlobalVar;
-
-	// Select which function(parameters) to call depending on event alias and returns ReturnValue
-	int Choose(const std::string Alias, const void *Parameters, void *ReturnValue);
-
-	void UserEvents::GetEventList(const std::string &Filename);
-
+	
 private:
-
-	void UserEvents::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams);
+	DESEngine Owner;
 
 	// Here we have an unordered map that assigns User Function (pointer) to each Key (string / Alias / Event Name)
-	std::unordered_map<std::string, void(UserEvents::*)(const void*, void*)> UFPAliasMap;
+	std::unordered_map<std::string, void(UserEvents::*)(const std::vector<boost::any>&)> UserFunctionPointerAliasMap;
 
-	void BuildUFPAliasMap();
+	bool const UserEvents::IsParamVariable(const boost::any &Parameter);
 
-	void Add(const void *Parameters, void *ReturnValue);
+
+	void UserEvents::BuildUFPAliasMap();
+	
+// User Functions / Events
+	void UserEvents::Add(const std::vector<boost::any> &Parameters);
+
 };
 
+#endif

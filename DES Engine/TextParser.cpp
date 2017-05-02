@@ -27,7 +27,7 @@ TextParser::~TextParser()
 }
 
 #pragma region Getters
-unsigned int TextParser::GetLineCount()
+const unsigned int TextParser::GetLineCount()
 {
 	return flin.size();
 }
@@ -38,13 +38,15 @@ std::string TextParser::GetLine(const unsigned int LineNumber)
 	return flin.at(LineNumber - 1);
 }
 
-std::string TextParser::GetFilename()
+const std::string TextParser::GetFilename()
 {
 	return TP_Filename;
 }
 #pragma endregion
 
-
+// Opens, reads and retrieves file lines
+// return	0: read ok
+//			1: could not open stream
 int TextParser::LoadLines(const std::string &Filename)
 {
 	TP_Filename = Filename;
@@ -67,11 +69,6 @@ int TextParser::LoadLines(const std::string &Filename)
 	flin.shrink_to_fit();
 
 	return 0;
-	/**
-	Returns:
-	0 = All is Good
-	1 = ifstream file = fail or bad
-	/**/
 }
 
 

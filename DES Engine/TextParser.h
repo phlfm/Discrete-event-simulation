@@ -2,12 +2,13 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
+#ifndef TXTPAR
+#define TXTPAR
+
 #pragma once
 #include <fstream>
 #include <string>
 #include <vector>
-
-
 
 class TextParser
 {
@@ -22,17 +23,17 @@ public:
 	int LoadLines(const std::string &Filename);
 
 	// Returns the total line count
-	unsigned int GetLineCount();
+	const unsigned int GetLineCount();
 
-	std::string TextParser::GetFilename();
+	const std::string GetFilename();
 
 	// LineNumber goes from [1, GetLineCount]
 	std::string GetLine(const unsigned int LineNumber);
 
 	// Returns blocks of words from LineContents where comments are ignored until the end
-	void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents, const bool AppendpS = false);
-		// eg: The quick "//brown fox" jumps //over the rabbit
-		// return: ["The", "quick", "//brown fox", "jumps"]
+	void GetWordBlocks(std::vector<std::string> &WordBlocks, const std::string &LineContents, const bool AppendpS = false);
+		// eg: The quick "/////"brown fox/"" jumps //over the rabbit
+		// return: ['The', 'quick', '//"brown fox"', 'jumps']
 
 private:
 	// flin = File Lines
@@ -40,9 +41,10 @@ private:
 	std::string TP_Filename;
 
 	// Helper functions for GetWordBlocks
-	void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents, const bool AppendpS = false);
-	void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl);
-	bool TextParser::IsCharWS(const char C);
+	void IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents, const bool AppendpS = false);
+	void IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl);
+	bool IsCharWS(const char C);
 
 };
 
+#endif
