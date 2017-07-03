@@ -12,31 +12,35 @@
 #include <unordered_map>
 #include <typeinfo>
 #include <boost/any.hpp>
-// #include "DESEngine.h" --> moved to DESEngine.cpp
-
-class DESEngine;
+#include "GlobalVariables.h"
 
 class UserEvents
 {
 	
 public:
 	
+	GlobalVariables UserVariables;
+
 	// Class constructor / destructor
-	UserEvents(DESEngine &Engine);
+	UserEvents();
 	~UserEvents();
 
-	// Select which function(parameters) to call
-	int UserEvents::Choose(const DESEngine::EventWithParams &Event);
+	struct EventWithParams { std::string Name; std::vector<boost::any> Params; };
+
+	// Lets an outside class (DESEngine) configure which event to run before calling UserEvents::Choose()
+	EventWithParams Event;
+
+	// Select which function(parameters) to call based on the EventWithParams Event (above)
+	int UserEvents::Choose();
 
 	
 private:
-	DESEngine Owner;
 
-	// Here we have an unordered map that assigns User Function (pointer) to each Key (string / Alias / Event Name)
+	// Here we have an unordered map that assigns User Function (pointer) to each Key (string or Alias or Event Name)
 	std::unordered_map<std::string, void(UserEvents::*)(const std::vector<boost::any>&)> UserFunctionPointerAliasMap;
 
 	bool const UserEvents::IsParamVariable(const boost::any &Parameter);
-
+	
 
 	void UserEvents::BuildUFPAliasMap();
 	

@@ -12,7 +12,7 @@ DESEngine::~DESEngine()
 {
 }
 
-// Returns an std::vector with the event list. EventList = {"add", {2, 3, $var_C}}
+// Returns an std::vector with the event list. EventList = {"add", {2, 3, "$var_C"}}
 void DESEngine::EventList_Load(const std::string & Filename)
 {
 	// Get File lines and line count
@@ -31,7 +31,7 @@ void DESEngine::EventList_Load(const std::string & Filename)
 	for (unsigned int i = 1; i <= fLineCount; i++)
 	{
 		Line = TxtPar.GetLine(i);
-		TxtPar.GetWordBlocks(WordBlocks, Line, true); // Because of how ExtractEventParameter, Append%s should be optional
+		TxtPar.GetWordBlocks(WordBlocks, Line, true); // Because of how ExtractEventParameter, Append %s should be optional
 	
 		EventParams.clear();
 		// Get event parameters by looping WordBlocks from 1 to size-1
@@ -50,7 +50,7 @@ void DESEngine::EventList_Load(const std::string & Filename)
 	
 	}
 	
-	//delete &TxtPar;
+	//Deconstruct TxtPar??
 	return;
 }
 
@@ -96,7 +96,8 @@ void DESEngine::Event_Select(const EventWithParams & Event)
 // Call user event
 	else
 	{
-		//UsrEvt.Choose(Event);
+		UsrEvt.Event = { Event.Name, Event.Params };
+		UsrEvt.Choose();
 	}
 }
 
@@ -105,7 +106,7 @@ void DESEngine::Event_Select(const EventWithParams & Event)
 bool DESEngine::Simulation_Start(const std::string &Filename)
 {
 	// Clear Variables
-	if (PurgeUserVariablesOnStart) { GVar_User.ClearAllVariables(); }
+	if (PurgeUserVariablesOnStart) { UsrEvt.UserVariables.ClearAllVariables(); }
 	GVar_EventLabels.ClearAllVariables();
 
 	EventPointer = EntryPoint;
@@ -167,6 +168,7 @@ void DESEngine::BuildSystemEventsAlias()
 {
 	SystemFunctionPointerMap.insert({ "HALT", &DESEngine::SysFct_HALT });
 	SystemFunctionPointerMap.insert({ "LABEL", &DESEngine::SysFct_LABEL });
+	SystemFunctionPointerMap.insert({ "@", &DESEngine::SysFct_LABEL }); //@@ also serves as label
 	SystemFunctionPointerMap.insert({ "GOTO", &DESEngine::SysFct_GOTO });
 
 	// Useful for iterative calculations with PurgeUserVariablesOnStart = False and EntryPoint

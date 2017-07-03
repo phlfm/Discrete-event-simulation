@@ -21,9 +21,8 @@ class DESEngine
 {
 public:
 // System Classes
-	GlobalVariables GVar_User = GlobalVariables();
 	GlobalVariables GVar_EventLabels = GlobalVariables();
-	//UserEvents UsrEvt = UserEvents(*this);
+	UserEvents UsrEvt = UserEvents();
 
 // System Variables
 	struct EventWithParams { std::string Name; std::vector<boost::any> Params; };
@@ -32,7 +31,8 @@ public:
 	unsigned int EntryPoint = 0; // Useful for iterative calculations
 	bool PurgeUserVariablesOnStart = true; // Useful for iterative calculations
 	bool Halted = false;
-
+	
+// Class methods
 	DESEngine();
 	~DESEngine();
 
@@ -47,7 +47,7 @@ public:
 
 
 private:
-	TextParser TxtPar = TextParser();
+	TextParser TxtPar;
 
 	void Simulation_Loop();
 

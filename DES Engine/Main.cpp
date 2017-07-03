@@ -10,13 +10,15 @@ int main()
 {
 
 	/// User Events
-	//TEST_UserFunctionADD(UsrEvt);
-	//TEST_UserEventsEventList(UsrEvt);
+	UserEvents UE = UserEvents();
+	TEST_UserEvents_ADD(UE);
 
 	/// Global Variable
+	//GlobalVariables GlobVar = GlobalVariables();
 	//TEST_GlobalVariableSetGetType(GlobVar);
 
 	/// Text Parser
+	//TextParser TxtPar = TextParser();	
 	//TEST_TextParser(TxtPar);
 	//TEST_TextParser_PrintFile(TxtPar);
 	//TEST_TextParser_WordBlock(TxtPar);
@@ -30,6 +32,33 @@ int main()
 }
 
 #pragma region Test Functions
+
+void TEST_UserEvents_ADD(UserEvents &UE)
+{
+	using std::endl;
+	using std::cout;
+	using std::cin;
+
+
+	int A[2];
+
+	//Get Input
+	cout << "Enter an Integer A: ";
+	cin >> A[0];
+	cout << endl << "Enter another integer B: ";
+	cin >> A[1];
+	cout << endl;
+
+	//UE.Event.Name = "ADD";
+	std::vector<boost::any> Param;
+	Param.push_back(A[0]);
+	Param.push_back(A[1]);
+	//UE.Event.Params = Param;
+	UE.Event = { "ADD", Param };
+	UE.Choose();
+
+	cout << endl << "A+B = " << UE.UserVariables.VarGet_Int("add");
+}
 
 void TEST_BoostAnyPTR()
 {
@@ -173,7 +202,5 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 		cout << "\n\n--------------- Word Block End ---------------\n\n\n";
 	}
 	#pragma endregion
-
-
 
 #pragma endregion Functions to test different Classes

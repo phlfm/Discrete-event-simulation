@@ -3,12 +3,11 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "UserEvents.h"
-#include "DESEngine.h"
 
 // Class Constructor
-UserEvents::UserEvents(DESEngine &Engine)
+UserEvents::UserEvents()
 {
-	Owner = Engine;
+	UserVariables = GlobalVariables();
 	BuildUFPAliasMap();
 }
 
@@ -20,7 +19,7 @@ UserEvents::~UserEvents()
 
 // Select which function(parameters) to call
 // Returns 0 = UserFunction Found, -1 and exception if no function found
-int UserEvents::Choose(const DESEngine::EventWithParams &Event)
+int UserEvents::Choose()
 {
 	try
 	{
@@ -77,14 +76,10 @@ void UserEvents::BuildUFPAliasMap()
 // User must modify void UserEvents::BuildUFPAliasMap()
 void UserEvents::Add(const std::vector<boost::any> &Parameters)
 {
-	//int *A = (int*)Parameters;
-	//int *B = A;
-	//B++;
-	boost::any i = Parameters.at(0);
-	//int *C = (int*)ReturnValue;
-	//*C = *A + *B;
+	int A = boost::any_cast<int>(Parameters.at(0));
+	int B = boost::any_cast<int>(Parameters.at(1));
 
-	//memcpy(ReturnValue, &C, sizeof(int));
+	UserVariables.VarSet("add", A + B);
 	return;
 }
 

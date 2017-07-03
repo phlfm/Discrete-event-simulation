@@ -21,6 +21,8 @@ int main();
 //#include "boost/any.hpp"
 //#include <typeinfo>
 
+void TEST_UserEvents_ADD(UserEvents &UE);
+
 void TEST_BoostAnyPTR();
 
 void TEST_GlobalVariableSetGetType(GlobalVariables &GV);
