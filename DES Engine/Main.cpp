@@ -8,10 +8,11 @@
 
 int main()
 {
+	TEST_DESEngine();
 
 	/// User Events
-	UserEvents UE = UserEvents();
-	TEST_UserEvents_ADD(UE);
+	//UserEvents UE = UserEvents();
+	//TEST_UserEvents_ADD(UE);
 
 	/// Global Variable
 	//GlobalVariables GlobVar = GlobalVariables();
@@ -201,6 +202,19 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 
 		cout << "\n\n--------------- Word Block End ---------------\n\n\n";
 	}
+
 	#pragma endregion
+
+	void TEST_DESEngine()
+	{
+		std::string File = "D:/DES/List1.txt";
+		DESEngine DE = DESEngine();
+
+		DE.EventList_Load(File);
+		
+		DE.Simulation_Start();
+
+		return;
+	}
 
 #pragma endregion Functions to test different Classes

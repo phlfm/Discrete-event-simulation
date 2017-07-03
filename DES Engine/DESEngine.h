@@ -21,8 +21,8 @@ class DESEngine
 {
 public:
 // System Classes
-	GlobalVariables GVar_EventLabels = GlobalVariables();
-	UserEvents UsrEvt = UserEvents();
+	GlobalVariables GVar_EventLabels;
+	UserEvents UsrEvt;
 
 // System Variables
 	struct EventWithParams { std::string Name; std::vector<boost::any> Params; };
@@ -37,6 +37,11 @@ public:
 	~DESEngine();
 
 	void DESEngine::EventList_Load(const std::string &Filename);
+
+	// Starts the Simulation on the Currently loaded EventList
+	bool DESEngine::Simulation_Start();
+
+	// Loads a NEW EventList and calls Simulation_Start()
 	bool DESEngine::Simulation_Start(const std::string &Filename);
 	void DESEngine::Simulation_Restart(const std::string &Filename);
 	void DESEngine::Event_Select(const EventWithParams &Event);
@@ -55,6 +60,8 @@ private:
 	void DESEngine::BuildSystemEventsAlias();
 
 	void DESEngine::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams);
+
+	std::string DESEngine::Boost2String(const boost::any & Parameter);
 };
 
 #endif

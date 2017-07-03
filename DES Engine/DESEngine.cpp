@@ -6,6 +6,10 @@
 
 DESEngine::DESEngine()
 {
+	GVar_EventLabels = GlobalVariables();
+	UsrEvt = UserEvents();
+
+	BuildSystemEventsAlias();
 }
 
 DESEngine::~DESEngine()
@@ -63,25 +67,8 @@ void DESEngine::Event_Select(const EventWithParams & Event)
 		std::string SystemEvent_Name = Event.Name;
 		SystemEvent_Name.erase(0, 1); // Removes starting @
 		
-		std::string SystemEvent_Param;
-
-	// Convert Event.Params to std::string
-		try
-		{
-			SystemEvent_Param = boost::any_cast<std::string>(Event.Params);
-		}
-		catch (const boost::bad_any_cast e)
-		{
-			try
-			{
-				SystemEvent_Param = (std::string)(boost::any_cast<const char*>(Event.Params));
-			}
-			catch (const boost::bad_any_cast e)
-			{
-				return;
-			}
-		}
-	// End Conversion
+		std::string SystemEvent_Param = "";
+		if (Event.Params.size() > 0) { SystemEvent_Param = Boost2String(Event.Params.at(0)); }
 
 		// Call system event
 		try
@@ -103,15 +90,22 @@ void DESEngine::Event_Select(const EventWithParams & Event)
 
 #pragma region System Functions
 
+// Loads a NEW EventList and calls Simulation_Start()
 bool DESEngine::Simulation_Start(const std::string &Filename)
+{
+	EventList_Load(Filename);
+
+	return Simulation_Start();
+}
+
+// Starts the Simulation on the Currently loaded EventList
+bool DESEngine::Simulation_Start()
 {
 	// Clear Variables
 	if (PurgeUserVariablesOnStart) { UsrEvt.UserVariables.ClearAllVariables(); }
 	GVar_EventLabels.ClearAllVariables();
 
 	EventPointer = EntryPoint;
-
-	EventList_Load(Filename);
 
 	Simulation_Loop();
 			
@@ -140,10 +134,7 @@ void DESEngine::SysFct_LABEL(const std::string &Label)
 // If the label is set, puts EventPointer to Label+1
 void DESEngine::SysFct_GOTO(const std::string &Label)
 {
-	if (GVar_EventLabels.VarGet_Int(Label, -1) != -1)
-	{
 		EventPointer = GVar_EventLabels.VarGet_uInt(Label) + 1;
-	}
 	return;
 }
 
@@ -219,17 +210,18 @@ void DESEngine::ExtractEventParameter(std::string & WordBlock, std::vector<boost
 				break;
 			case 's':
 				WordBlock.erase(0, 2); // Erases the identifier  s%
-				Param = WordBlock;
+				Param = std::string(WordBlock);
 				break;
 			default:
 				// If it doesn't have a pre-param-identifier treat as string
-				Param = WordBlock;
+				Param = std::string(WordBlock);
 				break;
 			}
+
+			EvtParams.push_back(Param);
+			return;
 		}
 
-		EvtParams.push_back(Param);
-		return;
 	}
 
 
@@ -238,7 +230,31 @@ void DESEngine::ExtractEventParameter(std::string & WordBlock, std::vector<boost
 		// OR WordBlock.at(1) != '%'; so it doesn't return from function
 		// OR It isn't a variable; so it doesn't return from function
 	// So we treat it as string:
-	Param = WordBlock;
+	Param = std::string(WordBlock);
 	EvtParams.push_back(Param);
 	return;
+}
+
+std::string DESEngine::Boost2String(const boost::any & Parameter)
+{
+	std::string ParamStr;
+
+	// Convert Parameter to std::string
+	try
+	{
+		ParamStr = boost::any_cast<std::string>(Parameter);
+	}
+	catch (const boost::bad_any_cast e)
+	{
+		try
+		{
+			ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
+		}
+		catch (const boost::bad_any_cast e)
+		{
+			return "";
+		}
+	}
+
+	return ParamStr;
 }

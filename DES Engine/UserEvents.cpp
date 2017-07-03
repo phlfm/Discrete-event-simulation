@@ -35,6 +35,16 @@ int UserEvents::Choose()
 
 bool const UserEvents::IsParamVariable(const boost::any & Parameter)
 {
+	std::string ParamStr = Boost2String(Parameter);
+	
+	if (ParamStr == "") { return false; }
+	// If we reach here, that means Parameter was cast into string
+	if (ParamStr.at(0) == '$') { return true; }
+	return false;
+}
+
+std::string UserEvents::Boost2String(const boost::any & Parameter)
+{
 	std::string ParamStr;
 
 	// Convert Parameter to std::string
@@ -50,15 +60,13 @@ bool const UserEvents::IsParamVariable(const boost::any & Parameter)
 		}
 		catch (const boost::bad_any_cast e)
 		{
-			return false;
+			return "";
 		}
 	}
-	// End Conversion
 
-	// If we reach here, that means Parameter was cast into string
-	if (ParamStr.at(0) == '$') { return true; }
-	return false;
+	return ParamStr;
 }
+
 
 // Builds the UserFunctionPointerAliasMap
 void UserEvents::BuildUFPAliasMap()
@@ -76,10 +84,27 @@ void UserEvents::BuildUFPAliasMap()
 // User must modify void UserEvents::BuildUFPAliasMap()
 void UserEvents::Add(const std::vector<boost::any> &Parameters)
 {
-	int A = boost::any_cast<int>(Parameters.at(0));
-	int B = boost::any_cast<int>(Parameters.at(1));
+	int A;
+	if (IsParamVariable(Parameters.at(0)))
+	{
+		A = UserVariables.VarGet_Int(Boost2String(Parameters.at(0)));
+	}
+	else
+	{
+		A = boost::any_cast<int>(Parameters.at(0));
+	}
 
-	UserVariables.VarSet("add", A + B);
+	int B;
+	if (IsParamVariable(Parameters.at(1)))
+	{
+		B = UserVariables.VarGet_Int(Boost2String(Parameters.at(1)));
+	}
+	else
+	{
+		B = boost::any_cast<int>(Parameters.at(1));
+	}
+
+	UserVariables.VarSet(Boost2String(Parameters.at(2)), A + B);
 	return;
 }
 
@@ -91,7 +116,7 @@ void UserEvents::Add(const std::vector<boost::any> &Parameters)
 //	Comment
 $	Variable
 "	Delimits strings (multi lines are not supported)
-/"
+\" \\
 i%, l%, u%, f%, d%, (optional) s%	determines the parameter type
 If parameter type is not determined, treat as string
 Each line should be:

@@ -32,6 +32,9 @@ void TEST_TextParser(TextParser &TP);
 void TEST_TextParser_PrintFile(TextParser &TP);
 void TEST_TextParser_WordBlock(TextParser &TP);
 
+void TEST_DESEngine();
+
+
 #pragma endregion
 
 #endif

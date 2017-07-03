@@ -43,6 +43,8 @@ private:
 	
 
 	void UserEvents::BuildUFPAliasMap();
+
+	std::string UserEvents::Boost2String(const boost::any & Parameter);
 	
 // User Functions / Events
 	void UserEvents::Add(const std::vector<boost::any> &Parameters);
