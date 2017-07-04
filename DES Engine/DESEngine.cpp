@@ -55,6 +55,16 @@ void DESEngine::EventList_Load(const std::string & Filename)
 	}
 	
 	//Deconstruct TxtPar??
+	if (PrintSystemCommands)
+	{
+		PrintSYS("@SYS: EventList Loaded:\n", 11);
+		PrintSYS("\t Event#\t EventName\t #Params\n", 11);
+		for (unsigned int i = 0; i < EventList.size(); i++)
+		{
+			PrintSYS("\t " + std::to_string(i) + "\t " + EventList.at(i).Name + "\t\t " + std::to_string(EventList.at(i).Params.size()) + "\n", 3);
+		}
+	}
+
 	return;
 }
 
@@ -93,6 +103,7 @@ void DESEngine::Event_Select(const EventWithParams & Event)
 // Loads a NEW EventList and calls Simulation_Start()
 bool DESEngine::Simulation_Start(const std::string &Filename)
 {
+	PrintSYS("@SYS: Simulation_Start(" + Filename + ")\n", 12);
 	EventList_Load(Filename);
 
 	return Simulation_Start();
@@ -101,8 +112,13 @@ bool DESEngine::Simulation_Start(const std::string &Filename)
 // Starts the Simulation on the Currently loaded EventList
 bool DESEngine::Simulation_Start()
 {
+	PrintSYS("@SYS: Simulation_Start\n", 12);
 	// Clear Variables
-	if (PurgeUserVariablesOnStart) { UsrEvt.UserVariables.ClearAllVariables(); }
+	if (PurgeUserVariablesOnStart)
+	{
+		UsrEvt.UserVariables.ClearAllVariables();
+		PrintSYS("@SYS: User Variables Purged\n", 12);
+	}
 	GVar_EventLabels.ClearAllVariables();
 
 	EventPointer = EntryPoint;
@@ -120,6 +136,7 @@ void DESEngine::Simulation_Restart(const std::string &Filename)
 
 void DESEngine::SysFct_HALT(const std::string &HaltText)
 {
+	PrintSYS("@SYS: HALTED\n", 12);
 	Halted = true;
 }
 
@@ -128,13 +145,15 @@ void DESEngine::SysFct_HALT(const std::string &HaltText)
 void DESEngine::SysFct_LABEL(const std::string &Label)
 {
 	GVar_EventLabels.VarSet(Label, EventPointer);
+	PrintSYS("@SYS: New Label: " + Label + " @ Event: " + std::to_string(EventPointer) + "\n");
 	return;
 }
 
 // If the label is set, puts EventPointer to Label+1
 void DESEngine::SysFct_GOTO(const std::string &Label)
 {
-		EventPointer = GVar_EventLabels.VarGet_uInt(Label) + 1;
+	EventPointer = GVar_EventLabels.VarGet_uInt(Label);
+	PrintSYS("@SYS: GOTO Label: " + Label + " @ Event: " + std::to_string(EventPointer) + "\n");
 	return;
 }
 
@@ -165,6 +184,8 @@ void DESEngine::BuildSystemEventsAlias()
 	// Useful for iterative calculations with PurgeUserVariablesOnStart = False and EntryPoint
 	SystemFunctionPointerMap.insert({ "RESTART", &DESEngine::Simulation_Restart });
 	SystemFunctionPointerMap.insert({ "START", &DESEngine::Simulation_Restart });
+
+	PrintSYS("@SYS: SystemFunctionPointerMap OK!\n", 12);
 }
 
 // Extracts the corresponding Event Parameters
@@ -242,13 +263,13 @@ std::string DESEngine::Boost2String(const boost::any & Parameter)
 	// Convert Parameter to std::string
 	try
 	{
-		ParamStr = boost::any_cast<std::string>(Parameter);
+		ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
 	}
 	catch (const boost::bad_any_cast e)
 	{
 		try
 		{
-			ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
+			ParamStr = boost::any_cast<std::string>(Parameter);
 		}
 		catch (const boost::bad_any_cast e)
 		{
@@ -257,4 +278,53 @@ std::string DESEngine::Boost2String(const boost::any & Parameter)
 	}
 
 	return ParamStr;
+}
+
+void DESEngine::PrintSYS(const char * Message, int OutputColor, int DefaultColor)
+{
+
+	if (PrintSystemCommands)
+	{
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, OutputColor);
+
+		std::cout << Message;
+
+		SetConsoleTextAttribute(hConsole, DefaultColor);
+		
+	}
+
+	return;
+	// Color codes:
+	// DARK	1		2		3		4		5		6		7		 8
+	//		Blue	Green	Cyan	Red		Purple	Gold	Whiteish Gray
+	// LIGHT	9		10		11		12		13		14		15	
+	//			Blue	Green	Cyan	Red		Purple	Yellow	White
+	// 16 to ... = Same colors but with blue background
+	// 16 = 10 in hexa = darkblue background + black font)
+}
+
+void DESEngine::PrintSYS(std::string Message, int OutputColor, int DefaultColor)
+{
+
+	if (PrintSystemCommands)
+	{
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, OutputColor);
+
+		std::cout << Message;
+
+		SetConsoleTextAttribute(hConsole, DefaultColor);
+
+		// Color codes:
+		// DARK	1		2		3		4		5		6		7		 8
+		//		Blue	Green	Cyan	Red		Purple	Gold	Whiteish Gray
+		// LIGHT	9		10		11		12		13		14		15	
+		//			Blue	Green	Cyan	Red		Purple	Yellow	White
+		// 16 to ... = Same colors but with blue background
+		// 16 = 10 in hexa = darkblue background + black font)
+
+	}
+
+	return;
 }

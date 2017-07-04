@@ -207,7 +207,7 @@ void TEST_GlobalVariableSetGetType(GlobalVariables &GV)
 
 	void TEST_DESEngine()
 	{
-		std::string File = "D:/DES/List1.txt";
+		std::string File = "D:/DES/MalFormatado.txt";
 		DESEngine DE = DESEngine();
 
 		DE.EventList_Load(File);

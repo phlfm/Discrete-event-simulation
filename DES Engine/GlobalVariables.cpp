@@ -102,7 +102,7 @@ std::string const	GlobalVariables::VarGet_String(const std::string Key, std::str
 {
 	try
 	{
-		return boost::any_cast<std::string>(VarMap.at(Key));
+		return (std::string)(boost::any_cast<const char*>(VarMap.at(Key)));
 	}
 	catch (const std::out_of_range e)
 	{
@@ -112,7 +112,7 @@ std::string const	GlobalVariables::VarGet_String(const std::string Key, std::str
 	{
 		try
 		{
-			return (std::string)(boost::any_cast<const char*>(VarMap.at(Key)));
+			return boost::any_cast<std::string>(VarMap.at(Key));
 		}
 		catch (const std::out_of_range e)
 		{

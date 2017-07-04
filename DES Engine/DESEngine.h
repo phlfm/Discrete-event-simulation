@@ -12,6 +12,7 @@
 #include "GlobalVariables.h"
 #include "TextParser.h"
 #include "UserEvents.h"
+#include <windows.h> // For colored console
 
 class GlobalVariables;
 class TextParser;
@@ -30,6 +31,7 @@ public:
 	unsigned int EventPointer = 0;
 	unsigned int EntryPoint = 0; // Useful for iterative calculations
 	bool PurgeUserVariablesOnStart = true; // Useful for iterative calculations
+	bool PrintSystemCommands = true; // Should system commands print to console?
 	bool Halted = false;
 	
 // Class methods
@@ -62,6 +64,9 @@ private:
 	void DESEngine::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams);
 
 	std::string DESEngine::Boost2String(const boost::any & Parameter);
+
+	void DESEngine::PrintSYS(const char * Message, int OutputColor = 4, int DefaultColor = 7);
+	void DESEngine::PrintSYS(std::string Message, int OutputColor = 4, int DefaultColor = 7);
 };
 
 #endif

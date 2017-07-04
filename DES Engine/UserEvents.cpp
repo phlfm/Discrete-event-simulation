@@ -3,6 +3,10 @@
 // Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
 
 #include "UserEvents.h"
+using std::cout;
+using std::cin;
+using std::endl;
+
 
 // Class Constructor
 UserEvents::UserEvents()
@@ -50,13 +54,13 @@ std::string UserEvents::Boost2String(const boost::any & Parameter)
 	// Convert Parameter to std::string
 	try
 	{
-		ParamStr = boost::any_cast<std::string>(Parameter);
+		ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
 	}
 	catch (const boost::bad_any_cast e)
 	{
 		try
 		{
-			ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
+			ParamStr = boost::any_cast<std::string>(Parameter);
 		}
 		catch (const boost::bad_any_cast e)
 		{
@@ -76,6 +80,7 @@ void UserEvents::BuildUFPAliasMap()
 
 	// Add user functions below:
 	UserFunctionPointerAliasMap.insert({ "ADD", &UserEvents::Add });
+	UserFunctionPointerAliasMap.insert({ "PRINT", &UserEvents::Print });
 
 }
 
@@ -105,6 +110,12 @@ void UserEvents::Add(const std::vector<boost::any> &Parameters)
 	}
 
 	UserVariables.VarSet(Boost2String(Parameters.at(2)), A + B);
+	cout << Boost2String(Parameters.at(2)) << " = " << A << " + " << B << " = " << A + B << endl;
+	return;
+}
+
+void UserEvents::Print(const std::vector<boost::any>& Parameters)
+{
 	return;
 }
 

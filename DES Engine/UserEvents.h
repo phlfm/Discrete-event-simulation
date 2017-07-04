@@ -7,6 +7,7 @@
 
 
 #pragma once
+#include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -48,6 +49,8 @@ private:
 	
 // User Functions / Events
 	void UserEvents::Add(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::Print(const std::vector<boost::any> &Parameters);
 
 };
 
