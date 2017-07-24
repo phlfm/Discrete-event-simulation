@@ -111,6 +111,7 @@ void UserEvents::Add(const std::vector<boost::any> &Parameters)
 
 	UserVariables.VarSet(Boost2String(Parameters.at(2)), A + B);
 	cout << Boost2String(Parameters.at(2)) << " = " << A << " + " << B << " = " << A + B << endl;
+	if (A + B > 5) { UserVariables.VarSet("$UserHalt", 1); }
 	return;
 }
 

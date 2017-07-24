@@ -95,6 +95,7 @@ void DESEngine::Event_Select(const EventWithParams & Event)
 	{
 		UsrEvt.Event = { Event.Name, Event.Params };
 		UsrEvt.Choose();
+		// TODO Check if Event.Name = "@NEWEVENT" where params = list of events
 	}
 }
 
@@ -134,10 +135,18 @@ void DESEngine::Simulation_Restart(const std::string &Filename)
 	return;
 }
 
-void DESEngine::SysFct_HALT(const std::string &HaltText)
+void DESEngine::SysFct_HALT(const std::string &HaltTestVariable)
 {
-	PrintSYS("@SYS: HALTED\n", 12);
-	Halted = true;
+	int HaltTest = UsrEvt.UserVariables.VarGet_Int(HaltTestVariable, 0, 0);
+	if (HaltTest != 0)
+	{
+		PrintSYS("@SYS: HALTED\n", 12);
+		Halted = true;
+	}
+	else
+	{
+		PrintSYS("@SYS: HALT TEST (" + std::to_string(HaltTest) + ")\n");
+	}
 }
 
 // Sets the label to current EventPointer.

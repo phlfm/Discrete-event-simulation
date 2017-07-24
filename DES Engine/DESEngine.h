@@ -48,7 +48,7 @@ public:
 	void DESEngine::Simulation_Restart(const std::string &Filename);
 	void DESEngine::Event_Select(const EventWithParams &Event);
 
-	void DESEngine::SysFct_HALT(const std::string &HaltText);  // Halts and prints string
+	void DESEngine::SysFct_HALT(const std::string &HaltTestVariable); // Tests user variable HaltTestVariable != 0
 	void DESEngine::SysFct_LABEL(const std::string &Label); // creates label with string as name
 	void DESEngine::SysFct_GOTO(const std::string &Label);  // goes to label (prints and does nothing if label doesnt exist)
 

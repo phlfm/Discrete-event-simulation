@@ -82,10 +82,11 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 
 	WordBlocks.clear();
 
-	// Loop Characters of LineContents
-	for (unsigned int i = 0; i < LineContents.length(); i++)
+	// Loop Characters of LineContents while Ctrl != -1 (comment)
+	for (unsigned int i = 0; i < LineContents.length() && (Ctrl != -1); i++)
 	{
 		C = LineContents.at(i);
+
 		if (!IsCharWS(C)) // Found first non WS (Whitespace)
 		{
 			// If the WordBlock starts with " --> It is a string
@@ -119,12 +120,13 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 			}
 		}
 	}
+
+	// End of character loop
 	if (Ctrl == 1)
 	{
 		// Word found and end of linecontents --> end of Word
 		WordBlocks.push_back(std::string(Word.begin(), Word.end()));
 		Word.clear();
-		Ctrl = 0;
 	}
 }
 
