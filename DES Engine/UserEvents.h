@@ -8,12 +8,14 @@
 
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <typeinfo>
 #include <boost/any.hpp>
 #include "GlobalVariables.h"
+#include <windows.h> // For colored console
 
 class UserEvents
 {
@@ -46,11 +48,28 @@ private:
 	void UserEvents::BuildUFPAliasMap();
 
 	std::string UserEvents::Boost2String(const boost::any & Parameter);
+
+	void UserEvents::Print(std::string Message, int OutputColor, int DefaultColor = 7);
 	
 // User Functions / Events
-	void UserEvents::Add(const std::vector<boost::any> &Parameters);
 
-	void UserEvents::Print(const std::vector<boost::any> &Parameters);
+	void UserEvents::InitMVN(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::FILE_INPUT(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::FILE_OUTPUT(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::MEMDUMP_LOAD(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::MEMDUMP(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::MEMPRINT(const std::vector<boost::any>& Parameters);
+
+	void UserEvents::PRINTREG(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::InstructionDecode(const std::vector<boost::any> &Parameters);
+
+	void UserEvents::Add(const std::vector<boost::any> &Parameters);
 
 };
 

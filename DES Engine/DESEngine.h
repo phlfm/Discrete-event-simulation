@@ -32,6 +32,8 @@ public:
 	unsigned int EntryPoint = 0; // Useful for iterative calculations
 	bool PurgeUserVariablesOnStart = true; // Useful for iterative calculations
 	bool PrintSystemCommands = true; // Should system commands print to console?
+	bool PrintHaltFailed = false;
+	bool PrintGoto = false;
 	bool Halted = false;
 	
 // Class methods

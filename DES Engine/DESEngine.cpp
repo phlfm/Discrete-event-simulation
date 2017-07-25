@@ -137,32 +137,42 @@ void DESEngine::Simulation_Restart(const std::string &Filename)
 
 void DESEngine::SysFct_HALT(const std::string &HaltTestVariable)
 {
-	int HaltTest = UsrEvt.UserVariables.VarGet_Int(HaltTestVariable, 0, 0);
-	if (HaltTest != 0)
+	if (UsrEvt.UserVariables.VarExists(HaltTestVariable))
 	{
-		PrintSYS("@SYS: HALTED\n", 12);
-		Halted = true;
+		int HaltTest = UsrEvt.UserVariables.VarGet_Int(HaltTestVariable, 0, 0);
+		if (HaltTest != 0)
+		{
+			PrintSYS("@SYS: HALTED\n", 12);
+			Halted = true;
+		}
+		else
+		{
+			if (PrintHaltFailed) { PrintSYS("@SYS: HALT TEST (" + std::to_string(HaltTest) + ")\n"); }
+		}
 	}
-	else
-	{
-		PrintSYS("@SYS: HALT TEST (" + std::to_string(HaltTest) + ")\n");
+	else {
+		if (PrintHaltFailed) { PrintSYS("@SYS: HALT TEST VARIABLE NOT FOUND (" + HaltTestVariable + ")\n"); }
 	}
 }
 
 // Sets the label to current EventPointer.
-// If two label names collide, the first is overwritten
+// If two label names collide, only the first is kept
 void DESEngine::SysFct_LABEL(const std::string &Label)
 {
-	GVar_EventLabels.VarSet(Label, EventPointer);
-	PrintSYS("@SYS: New Label: " + Label + " @ Event: " + std::to_string(EventPointer) + "\n");
+	if (!GVar_EventLabels.VarExists(Label))
+	{
+		GVar_EventLabels.VarSet(Label, EventPointer);
+		PrintSYS("@SYS: New Label: " + Label + " @ Event: " + std::to_string(EventPointer) + "\n");
+	}
 	return;
+
 }
 
 // If the label is set, puts EventPointer to Label+1
 void DESEngine::SysFct_GOTO(const std::string &Label)
 {
 	EventPointer = GVar_EventLabels.VarGet_uInt(Label);
-	PrintSYS("@SYS: GOTO Label: " + Label + " @ Event: " + std::to_string(EventPointer) + "\n");
+	if (PrintGoto) { PrintSYS("@SYS: GOTO Label: " + Label + " @ Event: " + std::to_string(EventPointer) + "\n"); }
 	return;
 }
 

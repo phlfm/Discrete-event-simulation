@@ -8,6 +8,21 @@
 
 int main()
 {
+	std::string File = "D:/DES/MVN_Template.txt";
+	DESEngine DE = DESEngine();
+
+	DE.EventList_Load(File);
+
+	DE.Simulation_Start();
+
+	system("pause");
+	return 0;
+}
+
+/**
+// Main para testes
+int main()
+{
 	TEST_DESEngine();
 
 	/// User Events
@@ -31,6 +46,7 @@ int main()
 
 	return 0;
 }
+/**/
 
 #pragma region Test Functions
 

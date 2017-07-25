@@ -70,6 +70,15 @@ boost::any* const	GlobalVariables::VarGet_ptr(const std::string Key)
 	}
 }
 
+bool const	GlobalVariables::VarExists(const std::string Key)
+{
+	if (VarMap.find(Key) != VarMap.end()) {
+		return true;
+	}
+
+	return false;
+}
+
 std::string const	GlobalVariables::VarGet_Type(const std::string Key)
 {
 	if (VarMap.at(Key).empty()) { return "EMPTY"; }

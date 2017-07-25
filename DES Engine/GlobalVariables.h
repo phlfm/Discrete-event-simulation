@@ -29,6 +29,7 @@ public:
 	// DANGEROUS - I don't know what happens when you edit the contents of this pointer that is a boost::any
 	boost::any*		const VarGet_ptr(const std::string Key);
 
+	bool			const VarExists(const std::string Key);
 	std::string		const VarGet_Type	(const std::string Key);
 
 	char			const VarGet_Char	(const std::string Key, char			DefaultNotFound = 0		, char				DefaultBadCast = -1);
