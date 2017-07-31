@@ -1,6 +1,6 @@
 // Project for "PCS3216 - Programming Systems"
 // Polytechnic School of the University of Sao Paulo
-// Copyright Pedro Henrique Lage Furtado de Mendonca - April 2017
+// Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
 
 #pragma once
 #include "Main.h"
@@ -8,7 +8,18 @@
 
 int main()
 {
-	std::string File = "D:/DES/MVN_Template.txt";
+
+	std::string File = "D:/DES/ADD MalFormatado.txt";
+	//std::string File = "D:/DES/MVN_Template.txt";
+	//std::string File = "D:/DES/MVN_CalcN2.txt";
+	//std::string File = "D:/DES/MVN_TesteAritimetico.txt";
+	//std::string File = "D:/DES/MVN_TesteJump.txt";
+	//std::string File = "D:/DES/MVN_TesteIO.txt";
+	//std::string File = "D:/DES/MVN_TesteSubRotina.txt";
+	//std::string File = "D:/DES/MVN_EP_N2.txt";
+	//std::string File = "D:/DES/MVN_MicroPreLoader.txt";
+	//std::string File = "D:/DES/MVN_DUMPER.txt";
+
 	DESEngine DE = DESEngine();
 
 	DE.EventList_Load(File);
@@ -18,6 +29,8 @@ int main()
 	system("pause");
 	return 0;
 }
+
+
 
 /**
 // Main para testes
