@@ -1,0 +1,33 @@
+// Inicializa a MVN
+	// PC, Ac, Memoria, InputC, OutputC tudo zerados
+	// PC, Ac, InputC, OutputC do tamanho de OPERANDSIZE
+	// MemorySize = 256*OPERANDSIZE bytes
+	// PCincrement = OPCODESIZE+OPERANDSIZE
+		// OPCODESIZE e OPERANDSIZE sao dados em bytes
+		// Assim, OPERANDSIZE = 1 byte = pode enderecar absoluto ate 256 enderecos
+			// Memoria / arquivos de [0 a 256*1-1] ou [00 a FF]
+INITMVN
+
+// Configura IO para uso das instrucoes abaixo
+	// PD - PutData, escreve um byte do Ac no arquivo OUTPUT na posicao OutputC
+	// GD - GetData, recebe um byte do arquivo INPUT no Ac na posicao InputC
+FILE_INPUT	"D:/DES/MVN_INPUT.bin"
+FILE_OUTPUT	"D:/DES/MVN_OUTPUT.bin"
+
+// Carrega um dump de memoria
+MEMDUMP_LOAD "D:/DES/MVN_N2_SQRT.bin"
+
+@@ "Decode Loop"
+
+	// Decodifica e executa a instrucao em Mem(PC)
+	// PC ja eh incrementado ou apontado no endereco
+	// correto de acordo com a instrucao
+	InstructionDecode
+	
+	MEMDUMP "D:/DES/MVN_N2_SQRT_DUMP.bin"
+	@HALT $MVNHALT
+@GOTO "Decode Loop"
+
+// Outras Instrucoes
+	// MEMDUMP "D:/DES/DUMP.bin" // Faz um dump da memoria atual da MVN
+	// PRINTREG // Faz um print do PC, Ac, InputC, OutputC

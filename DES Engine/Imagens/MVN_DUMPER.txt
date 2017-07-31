@@ -1,0 +1,15 @@
+//"D:/DES/MVN_DUMPER_OUTPUT.bin" contem o dump gerado PELO PROGRAMA
+//"D:/DES/MVN_DUMPER_DUMP.bin" contem o dump gerado pela MVN
+INITMVN
+
+FILE_OUTPUT	"D:/DES/MVN_DUMPER_OUTPUT.bin"
+
+// Carrega um dump de memoria
+MEMDUMP_LOAD "D:/DES/MVN_DUMPER.bin"
+
+@@ "Decode Loop"
+
+	InstructionDecode
+	MEMDUMP "D:/DES/MVN_DUMPER_DUMP.bin"
+	@HALT $MVNHALT
+@GOTO "Decode Loop"

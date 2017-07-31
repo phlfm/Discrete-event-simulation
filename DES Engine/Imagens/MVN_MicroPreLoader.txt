@@ -1,0 +1,24 @@
+INITMVN
+
+// Programa a ser carregado
+	// Deve ser menor que tamanho da memoria - 7 bytes
+	// No caso de memoria FF, o programa pode ir ate F8
+FILE_INPUT	"D:/DES/MVN_MicroPreLoader_Input.bin"
+
+// Carrega um dump de memoria
+MEMDUMP_LOAD "D:/DES/MVN_MicroPreLoader.bin"
+
+@@ "Decode Loop"
+	InstructionDecode
+	MEMDUMP "D:/DES/MVN_MicroPreLoader_DUMP.bin"
+	@HALT $MVNHALT
+@GOTO "Decode Loop"
+
+// O micropreloader faz um jump ate F5 onde ele comeca
+	// 00 JP F5
+	// F5 LV 00
+	// F7 GD Acumulador = Até esse byte pode ser sobre-escrito
+	// F9 + UM
+	// FB EOF 00
+	// FD JP F7
+	// FF UM (01)

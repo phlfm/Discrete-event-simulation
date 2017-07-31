@@ -1,0 +1,28 @@
+// Teste de programa muito mal formatado
+
+	@LABEL "Simulation Start"
+
+	// Declare C and D
+	ADD i%0 i%0 $C // C = 0+0
+	ADD i%0 i%0 $D // D = 0+0
+	ADD i%0 i%0 $UserHalt // UserHalt = 0
+
+			// Entre os parametros de "Soma Iterativa"
+			// há varios tabs e espaços
+	  	@@ "Soma Iterativa"
+		// C = C+1
+		// D = C+D
+	  	  	ADD  	 i%1	   $C	  $C
+		ADD   $C	     $D 	  	   $D
+		PRINT
+@@ "Sim End"
+
+// Esse programa testa tanto o motor de eventos
+		// como o textparser
+	// pode-se ver que whitespaces antes dos comandos
+		// (como tab e espaço)não
+	// alteram seu funcionamento
+// Whitespaces entre os parametros também não
+
+@HALT $UserHalt
+@GOTO "Soma Iterativa"
