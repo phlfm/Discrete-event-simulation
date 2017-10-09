@@ -2,8 +2,8 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
 
-#ifndef USEREVENTS
-#define USEREVENTS
+#ifndef H_USEREVENTS
+#define H_USEREVENTS
 
 
 #pragma once
@@ -73,4 +73,4 @@ private:
 
 };
 
-#endif
+#endif //H_USEREVENTS

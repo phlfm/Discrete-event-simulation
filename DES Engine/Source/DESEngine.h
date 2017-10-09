@@ -1,8 +1,8 @@
 // Project for "PCS3216 - Programming Systems"
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
-#ifndef DESENGING
-#define DESENGINE
+#ifndef H_DESENGINE
+#define H_DESENGINE
 
 #pragma once
 #include <string>
@@ -71,4 +71,4 @@ private:
 	void DESEngine::PrintSYS(std::string Message, int OutputColor = 4, int DefaultColor = 7);
 };
 
-#endif
+#endif // H_DESENGINE

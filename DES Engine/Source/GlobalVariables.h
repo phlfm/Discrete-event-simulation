@@ -2,8 +2,8 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
 
-#ifndef GLOBVAR
-#define GLOBVAR
+#ifndef H_GLOBALVARIABLES
+#define H_GLOBALVARIABLES
 
 
 #pragma once
@@ -47,4 +47,4 @@ private:
 	std::unordered_map<std::string, boost::any> VarMap;
 };
 
-#endif
+#endif //H_GLOBALVARIABLES

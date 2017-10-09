@@ -2,8 +2,8 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
 
-#ifndef TXTPAR
-#define TXTPAR
+#ifndef H_TEXTPARSER
+#define H_TEXTPARSER
 
 #pragma once
 #include <fstream>
@@ -47,4 +47,4 @@ private:
 
 };
 
-#endif
+#endif //H_TEXTPARSER

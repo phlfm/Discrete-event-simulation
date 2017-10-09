@@ -15,40 +15,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DESEngine.cpp">
+    <ClCompile Include="Source\DESEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserEvents.cpp">
+    <ClCompile Include="Source\GlobalVariables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GlobalVariables.cpp">
+    <ClCompile Include="Source\TextParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextParser.cpp">
+    <ClCompile Include="Source\UserEvents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DESEngine.h">
+    <ClInclude Include="Source\DESEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UserEvents.h">
+    <ClInclude Include="Source\GlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Main.h">
+    <ClInclude Include="Source\Main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalVariables.h">
+    <ClInclude Include="Source\TextParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextParser.h">
+    <ClInclude Include="Source\UserEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ChangeLog.txt" />
   </ItemGroup>
 </Project>

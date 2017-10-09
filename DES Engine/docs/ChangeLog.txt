@@ -7,3 +7,9 @@
 			- TextParser::GetWordBlock fully implemented and tested.
 			- Changes to Main TextParser Test Functions
 			- Changes to other functions of TextParser
+	October
+		Before 09
+			- Lots of changes, better follow Git Commits.
+		09 Monday
+			- Preparing for new improvements and for new university project: Operating Systems!
+			- Restructure folder tree for better organization

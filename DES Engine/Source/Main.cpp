@@ -8,8 +8,8 @@
 
 int main()
 {
-
-	std::string File = "D:/DES/ADD MalFormatado.txt";
+	std::string File = "C:/Users/pedri/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/ADD MalFormatado.txt";
+	//std::string File = "D:/DES/ADD MalFormatado.txt";
 	//std::string File = "D:/DES/MVN_Template.txt";
 	//std::string File = "D:/DES/MVN_CalcN2.txt";
 	//std::string File = "D:/DES/MVN_TesteAritimetico.txt";

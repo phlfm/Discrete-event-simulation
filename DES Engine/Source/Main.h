@@ -2,8 +2,8 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
 
-#ifndef MAIN
-#define MAIN
+#ifndef H_MAIN
+#define H_MAIN
 
 
 #pragma once
@@ -37,4 +37,4 @@ void TEST_DESEngine();
 
 #pragma endregion
 
-#endif
+#endif //H_MAIN
