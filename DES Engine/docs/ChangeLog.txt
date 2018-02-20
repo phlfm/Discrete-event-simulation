@@ -13,3 +13,26 @@
 		09 Monday
 			- Preparing for new improvements and for new university project: Operating Systems!
 			- Restructure folder tree for better organization
+2018
+	February
+		08 Thursday
+			- Included Event.h/cpp
+			 -- An abstract class that allows users to implement their own events through it's Run function.
+			- Included EventCatalog
+			 -- This class is now what "registers" and looks up user events.
+			- GlobalVariables.h/cpp
+			 -- Included DESE namespace
+			 -- Removed lots of VarGet_TYPE functions, replaced them for a template function
+			 -- Removed all catch (out_of_range) checks and almost all catch (bad_cast). Functions had parameters DefaultNotFound and DefaultBadCast and behaved as "C style" functions, with specific returns in case of errors.
+			 -- Now exceptions WON'T be handled and will be allowed to propagate through code.
+			
+TODO:
+	- Acertar
+		-- DESEngine.h/cpp
+		-- Main.h/cpp
+		-- TextParser.h/cpp (?)
+	- Test Changes
+	- Update pointers to smart pointers
+	
+TAGS:
+	C++17 Things that need updating to C++17 standards.

@@ -1,74 +1,49 @@
-// Project for "PCS3216 - Programming Systems"
 // Polytechnic School of the University of Sao Paulo
-// Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
+// Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+#pragma once
 #ifndef H_DESENGINE
 #define H_DESENGINE
-
-#pragma once
+// STD includes:
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include "boost/any.hpp"
-#include "GlobalVariables.h"
+#include <iostream>
+#include "boost/any.hpp" //C++17: Update to std::any
+// My Includes:
 #include "TextParser.h"
-#include "UserEvents.h"
-#include <windows.h> // For colored console
-
-class GlobalVariables;
-class TextParser;
-class UserEvents;
-
-class DESEngine
-{
-public:
-// System Classes
-	GlobalVariables GVar_EventLabels;
-	UserEvents UsrEvt;
-
-// System Variables
-	struct EventWithParams { std::string Name; std::vector<boost::any> Params; };
-	std::vector<EventWithParams> EventList;
-	unsigned int EventPointer = 0;
-	unsigned int EntryPoint = 0; // Useful for iterative calculations
-	bool PurgeUserVariablesOnStart = true; // Useful for iterative calculations
-	bool PrintSystemCommands = true; // Should system commands print to console?
-	bool PrintHaltFailed = false;
-	bool PrintGoto = false;
-	bool Halted = false;
-	
-// Class methods
-	DESEngine();
-	~DESEngine();
-
-	void DESEngine::EventList_Load(const std::string &Filename);
-
-	// Starts the Simulation on the Currently loaded EventList
-	bool DESEngine::Simulation_Start();
-
-	// Loads a NEW EventList and calls Simulation_Start()
-	bool DESEngine::Simulation_Start(const std::string &Filename);
-	void DESEngine::Simulation_Restart(const std::string &Filename);
-	void DESEngine::Event_Select(const EventWithParams &Event);
-
-	void DESEngine::SysFct_HALT(const std::string &HaltTestVariable); // Tests user variable HaltTestVariable != 0
-	void DESEngine::SysFct_LABEL(const std::string &Label); // creates label with string as name
-	void DESEngine::SysFct_GOTO(const std::string &Label);  // goes to label (prints and does nothing if label doesnt exist)
+#include "SystemManager.h"
+#include "Event.h"
+#include "SystemEvents.h"
 
 
-private:
-	TextParser TxtPar;
+using std::string; using std::vector; using boost::any;
 
-	void Simulation_Loop();
+namespace DESE {
 
-	std::unordered_map<std::string, void(DESEngine::*)(const std::string&)> SystemFunctionPointerMap;
-	void DESEngine::BuildSystemEventsAlias();
+	class DESEngine
+	{
+	public:
+		// User MUST populate at least EventCatalog, the rest is optional.
+		DESEngine(SystemManager SystemManager);
+		~DESEngine();
 
-	void DESEngine::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams);
+		void DESEngine::EventList_Load(const std::string &Filename);
 
-	std::string DESEngine::Boost2String(const boost::any & Parameter);
+		// Loads a NEW EventList and calls Simulation_Start()
+		void DESEngine::Simulation_Start(const std::string &Filename);
+		void DESEngine::Simulation_Start();
+		
+	protected:
+		// SysMan stores event list, catalog, user variables, engine settings, ...
+		SystemManager SysMan;
+		SysEvent_Collection SysEvt_Collect; // Stores the "Event" object of system events.
 
-	void DESEngine::PrintSYS(const char * Message, int OutputColor = 4, int DefaultColor = 7);
-	void DESEngine::PrintSYS(std::string Message, int OutputColor = 4, int DefaultColor = 7);
-};
+		void Simulation_Loop();
+		void Simulation_End();
+		void Print_AllSettings();
+		void DESEngine::ExtractEventParameter(std::string &WordBlock, std::vector<boost::any> &EvtParams);
+		
+		
+	}; /// class DESEngine
 
-#endif // H_DESENGINE
+} /// namespace DESE
+#endif /// H_DESENGINE

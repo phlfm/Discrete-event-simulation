@@ -1,50 +1,45 @@
-// Project for "PCS3216 - Programming Systems"
 // Polytechnic School of the University of Sao Paulo
-// Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
+// Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
 
 #ifndef H_GLOBALVARIABLES
 #define H_GLOBALVARIABLES
 
 
 #pragma once
-#include <typeinfo>
+#include <typeinfo> // Where is this being used?
 #include <string>
 #include <unordered_map>
-#include <boost/any.hpp>
+#include <boost/any.hpp> //C++17: Update to std::any
 
+namespace DESE {
+	class GlobalVariables
+	{
 
-class GlobalVariables
-{
+	public:
+		void ClearAllVariables();
 
-public:
-	GlobalVariables();
-	~GlobalVariables();
+		void				  VarSet(const std::string Key, const boost::any Value);
+		void				  VarDel(const std::string Key);
+		bool				  VarExists(const std::string Key) const;
 
-	void ClearAllVariables();
+		template <typename T>
+		T				VarGet_casted(const std::string Key) const;
+		boost::any		VarGet(const std::string Key) const;
+		std::string		VarGet_String(const std::string Key) const;
+		std::string		VarGet_Type(const std::string Key) const;
 
-	void				  VarSet(const std::string Key, const boost::any Value);
-	boost::any		const VarGet(const std::string Key, const boost::any DefaultNotFound = 0);
-	void				  VarDel(const std::string Key);
+	protected:
+		
+		std::unordered_map<std::string, boost::any> VarMap;
 
-	// DANGEROUS - I don't know what happens when you edit the contents of this pointer that is a boost::any
-	boost::any*		const VarGet_ptr(const std::string Key);
+	}; //class GlobalVariables
 
-	bool			const VarExists(const std::string Key);
-	std::string		const VarGet_Type	(const std::string Key);
+	// Template Definition
+	template<typename T>
+	T GlobalVariables::VarGet_casted(const std::string Key) const
+	{
+		return boost::any_cast<T>(VarMap.at(Key));
+	}
 
-	char			const VarGet_Char	(const std::string Key, char			DefaultNotFound = 0		, char				DefaultBadCast = -1);
-	std::string		const VarGet_String	(const std::string Key, std::string		DefaultNotFound = "NF"	, std::string		DefaultBadCast = "BC");
-	int				const VarGet_Int	(const std::string Key, int				DefaultNotFound = 0		, int				DefaultBadCast = -1);
-	unsigned int	const VarGet_uInt	(const std::string Key, unsigned int	DefaultNotFound = 0		, unsigned int		DefaultBadCast = -1);
-	long			const VarGet_Long	(const std::string Key, long			DefaultNotFound = 0		, long				DefaultBadCast = -1);
-	unsigned long	const VarGet_uLong	(const std::string Key, unsigned long	DefaultNotFound = 0		, unsigned long		DefaultBadCast = -1);
-	float			const VarGet_Float	(const std::string Key, float			DefaultNotFound = 0.0	, float				DefaultBadCast = -0.1);
-	double			const VarGet_Double	(const std::string Key, double			DefaultNotFound = 0.0	, double			DefaultBadCast = -0.1);
-
-
-private: 
-
-	std::unordered_map<std::string, boost::any> VarMap;
-};
-
+} // namespace DESE
 #endif //H_GLOBALVARIABLES

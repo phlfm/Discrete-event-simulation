@@ -1,6 +1,5 @@
-// Project for "PCS3216 - Programming Systems"
 // Polytechnic School of the University of Sao Paulo
-// Copyright Pedro Henrique Lage Furtado de Mendonca - 2017
+// Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
 
 #include "TextParser.h"
 #define _HTab	9  // Horizontal Tab
@@ -12,6 +11,7 @@
 #define _FSlash 47 // /
 #define _BSlash 92 // \
 
+using namespace DESE;
 
 TextParser::TextParser(const std::string &Filename)
 {
@@ -45,17 +45,15 @@ const std::string TextParser::GetFilename()
 #pragma endregion
 
 // Opens, reads and retrieves file lines
-// return	0: read ok
-//			1: could not open stream
-int TextParser::LoadLines(const std::string &Filename)
+void TextParser::LoadLines(const std::string &Filename)
 {
 	TP_Filename = Filename;
 
 	std::ifstream file(Filename, std::ifstream::in);
 	std::string str;
 
-	// Checks for "fail" and "bad"
-	if (!file) { return 1; }
+	
+	if (!file) { file.close(); throw std::exception("TextParser::LoadLines: Could not open file"); }
 
 	flin.clear();
 
@@ -68,7 +66,7 @@ int TextParser::LoadLines(const std::string &Filename)
 
 	flin.shrink_to_fit();
 
-	return 0;
+	return;
 }
 
 
