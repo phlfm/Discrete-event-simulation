@@ -42,7 +42,7 @@ namespace DESE {
 		}
 	}; ///SystemManager
 
-	std::string DESE::Boost2String(const boost::any & Parameter) 
+	std::string Boost2String(const boost::any & Parameter) 
 	{
 		std::string ParamStr;
 
@@ -67,7 +67,7 @@ namespace DESE {
 	}
 
 	//template <typename T>
-	void DESE::PrintSysMsg(std::string Message, const SystemManager *SysMan, int OutputColor = 4, int DefaultColor = 7)
+	void PrintSysMsg(std::string Message, const SystemManager *SysMan, int OutputColor = 4, int DefaultColor = 7)
 	{
 		if (SysMan->Settings.Print_SystemCommands)
 		{

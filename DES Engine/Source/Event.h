@@ -34,7 +34,7 @@ namespace DESE {
 	protected:
 
 		bool should_Reinstantiate = false;
-		class SystemManager *SysMan = nullptr;
+		SystemManager *SysMan = nullptr;
 
 }; // class Event
 } // namespace DESE

@@ -8,26 +8,11 @@
 #include "Event.h"
 #include "SystemManager.h"
 
-
 namespace DESE {
-
-	struct SysEvent_Collection {
-		void RegisterEvents(SystemManager *SysMan)
-		{
-			SysMan->Event_Catalog.RegisterEvent("@HALT", &Evt_Halt);
-			SysMan->Event_Catalog.RegisterEvent("@GOTO", &Evt_Goto);
-
-			SysMan->Event_Catalog.RegisterEvent("LABEL", &Evt_Label);
-			SysMan->Event_Catalog.RegisterEvent("@@", &Evt_Label);
-		}
-		class SysEvent_HALT Evt_Halt;
-		class SysEvent_GOTO Evt_Goto;
-		class SysEvent_LABEL Evt_Label;
-	};
-
-
 	class SysEvent_HALT : public Event {
 	public:
+		SysEvent_HALT(SystemManager* SysMan) : Event(SysMan) {};
+
 		// If no parameter is found, halts execution. If at least one parameter is found, it is treated as
 		// a user variable and if that user variable is diferent from zero, simulation is halted.
 		virtual void Run(const vector<boost::any> &Parameters) {
@@ -61,11 +46,15 @@ namespace DESE {
 
 	class SysEvent_LABEL : public Event {
 	public:
+		SysEvent_LABEL(SystemManager* SysMan = nullptr) : Event(SysMan) {};
+
 		virtual void Run(const vector<boost::any> &Parameters) {}; //do nothing
 	}; ///LABEL
 
 	class SysEvent_GOTO : public Event {
 	public:
+		SysEvent_GOTO(SystemManager* SysMan) : Event(SysMan) {};
+
 		// Goes to the first label in EventList that matches at least one parameter.
 		virtual void Run(const vector<boost::any> &Parameters)
 		{

@@ -5,11 +5,24 @@
 
 DESE::DESEngine::DESEngine(SystemManager SystemManager) : SysMan(SystemManager)
 {
-	SysEvt_Collect.RegisterEvents(&SysMan);
+	SystemEvents.insert({ "Evt_Halt", new SysEvent_HALT(&SysMan) });
+	SystemEvents.insert({ "Evt_Goto", new SysEvent_GOTO(&SysMan) });
+	SystemEvents.insert({ "Evt_Label", new SysEvent_LABEL(&SysMan) }); // since label does nothing, it's sysman is optional
+
+	SysMan.Event_Catalog.RegisterEvent("@HALT", SystemEvents.at("Evt_Halt"));
+	SysMan.Event_Catalog.RegisterEvent("@GOTO", SystemEvents.at("Evt_Goto"));
+
+	SysMan.Event_Catalog.RegisterEvent("LABEL", SystemEvents.at("Evt_Label"));
+	SysMan.Event_Catalog.RegisterEvent("@@", SystemEvents.at("Evt_Label"));
 }
 
 DESE::DESEngine::~DESEngine()
 {
+	// Clear memory allocated in the constructor.
+	for (auto& evt : SystemEvents)
+	{
+		delete evt.second;
+	}
 }
 
 void DESE::DESEngine::Simulation_Start(const std::string &Filename)

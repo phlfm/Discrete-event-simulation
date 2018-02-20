@@ -13,17 +13,15 @@ using namespace DESE;
 
 namespace ADDMALFORMATADO
 {
+	bool const IsParamVariable(const boost::any & Parameter)
+	{
+		std::string ParamStr = Boost2String(Parameter);
 
-	struct UserEvent_Collection {
-		void RegisterEvents(SystemManager *SysMan)
-		{
-			SysMan->Event_Catalog.RegisterEvent("ADD", &Evt_Add);
-			SysMan->Event_Catalog.RegisterEvent("PRINT", &Evt_Print);
-
-		}
-		class UserEvent_ADD Evt_Add;
-		class UserEvent_PRINT Evt_Print;
-	}; /// sturct UserEvent__Collection
+		if (ParamStr == "") { return false; }
+		// If we reach here, that means Parameter was cast into string
+		if (ParamStr.at(0) == '$') { return true; }
+		return false;
+	}
 
 	class UserEvent_ADD : public Event {
 	public:
@@ -64,14 +62,16 @@ namespace ADDMALFORMATADO
 		};
 	}; ///PRINT
 
-	bool const IsParamVariable(const boost::any & Parameter)
-	{
-		std::string ParamStr = Boost2String(Parameter);
+	struct UserEvent_Collection {
+		void RegisterEvents(SystemManager *SysMan)
+		{
+			SysMan->Event_Catalog.RegisterEvent("ADD", &Evt_Add);
+			SysMan->Event_Catalog.RegisterEvent("PRINT", &Evt_Print);
 
-		if (ParamStr == "") { return false; }
-		// If we reach here, that means Parameter was cast into string
-		if (ParamStr.at(0) == '$') { return true; }
-		return false;
-	}
+		}
+		class UserEvent_ADD Evt_Add;
+		class UserEvent_PRINT Evt_Print;
+	}; /// sturct UserEvent__Collection
+
 } /// namespace ADDMALFORMATADO
 #endif // H_ADDMALFORMATADO

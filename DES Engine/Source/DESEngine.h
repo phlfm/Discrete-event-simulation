@@ -6,12 +6,13 @@
 // STD includes:
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <iostream>
 #include "boost/any.hpp" //C++17: Update to std::any
 // My Includes:
 #include "TextParser.h"
-#include "SystemManager.h"
 #include "Event.h"
+#include "SystemManager.h"
 #include "SystemEvents.h"
 
 
@@ -35,7 +36,8 @@ namespace DESE {
 	protected:
 		// SysMan stores event list, catalog, user variables, engine settings, ...
 		SystemManager SysMan;
-		SysEvent_Collection SysEvt_Collect; // Stores the "Event" object of system events.
+		
+		std::unordered_map<std::string, Event*> SystemEvents;
 
 		void Simulation_Loop();
 		void Simulation_End();
