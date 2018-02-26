@@ -8,27 +8,24 @@ using namespace DESE;
 
 int main()
 {
-	std::string Path = "C:/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/";
-	std::string File = Path + "ADD MalFormatado.txt";
-	//std::string File = "D:/DES/ADD MalFormatado.txt";
-	//std::string File = "D:/DES/MVN_Template.txt";
-	//std::string File = "D:/DES/MVN_CalcN2.txt";
-	//std::string File = "D:/DES/MVN_TesteAritimetico.txt";
-	//std::string File = "D:/DES/MVN_TesteJump.txt";
-	//std::string File = "D:/DES/MVN_TesteIO.txt";
-	//std::string File = "D:/DES/MVN_TesteSubRotina.txt";
-	//std::string File = "D:/DES/MVN_EP_N2.txt";
-	//std::string File = "D:/DES/MVN_MicroPreLoader.txt";
-	//std::string File = "D:/DES/MVN_DUMPER.txt";
+	//std::string DropboxPath = "C:/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/"; // path do desktop
+	std::string DropboxPath = "C:/Users/pedri/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/"; // path do laptop
+	std::string File = DropboxPath + "ADD MalFormatado" + ".txt";
+	
 
-	SystemManager SysMan;
+		SystemManager SysMan;
+		SysMan.Settings.Print_SystemCommands = true;
+		SysMan.Settings.GoTo_Print = true;
 
-	ADDMALFORMATADO::UserEvent_Collection UserEvents;
-	UserEvents.RegisterEvents(&SysMan);
+		ADDMALFORMATADO::UserEvent_Collection UserEvents(&SysMan);
+		UserEvents.RegisterEvents(&SysMan);
 
-	DESEngine DE = DESEngine(SysMan);
+		DESEngine DE = DESEngine(&SysMan);
+		DE.Simulation_Start(File);
+	
+		//std::cout << "Caught untreated exception in main.cpp" << std::endl;
+		//std::cout << ex.what() << std::endl << std::endl;
 
-	DE.Simulation_Start(File);
 
 	system("pause");
 	return 0;

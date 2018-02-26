@@ -24,7 +24,7 @@ namespace DESE {
 	{
 	public:
 		// User MUST populate at least EventCatalog, the rest is optional.
-		DESEngine(SystemManager SystemManager);
+		DESEngine(SystemManager *SystemManager);
 		~DESEngine();
 
 		void DESEngine::EventList_Load(const std::string &Filename);
@@ -35,7 +35,7 @@ namespace DESE {
 		
 	protected:
 		// SysMan stores event list, catalog, user variables, engine settings, ...
-		SystemManager SysMan;
+		SystemManager *SysMan = nullptr;
 		
 		std::unordered_map<std::string, Event*> SystemEvents;
 

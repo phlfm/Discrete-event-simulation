@@ -6,6 +6,9 @@
 
 
 #pragma once
+#include <string>
+#include <iostream>
+#include <stdexcept>
 #include "DESEngine.h"
 #include "UserEvents/ADD_MalFormatado.h"
 

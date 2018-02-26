@@ -6,6 +6,7 @@
 #define H_ADDMALFORMATADO
 
 #include <iostream>
+#include <memory>
 #include "../Event.h"
 #include "../SystemManager.h"
 
@@ -25,6 +26,7 @@ namespace ADDMALFORMATADO
 
 	class UserEvent_ADD : public Event {
 	public:
+		UserEvent_ADD(SystemManager* SysMan) : Event(SysMan) {};
 		virtual void Run(const vector<boost::any> &Parameters) {
 			// Get A
 			int A;
@@ -56,6 +58,7 @@ namespace ADDMALFORMATADO
 
 	class UserEvent_PRINT : public Event {
 	public:
+		UserEvent_PRINT(SystemManager* SysMan) : Event(SysMan) {};
 		virtual void Run(const vector<boost::any> &Parameters) {
 			std::cout << "Print called...\n";
 			return;
@@ -63,14 +66,15 @@ namespace ADDMALFORMATADO
 	}; ///PRINT
 
 	struct UserEvent_Collection {
+		UserEvent_Collection(SystemManager *SysMan) : Evt_Add(SysMan), Evt_Print(SysMan) {};
 		void RegisterEvents(SystemManager *SysMan)
 		{
 			SysMan->Event_Catalog.RegisterEvent("ADD", &Evt_Add);
 			SysMan->Event_Catalog.RegisterEvent("PRINT", &Evt_Print);
 
 		}
-		class UserEvent_ADD Evt_Add;
-		class UserEvent_PRINT Evt_Print;
+		UserEvent_ADD Evt_Add;
+		UserEvent_PRINT Evt_Print;
 	}; /// sturct UserEvent__Collection
 
 } /// namespace ADDMALFORMATADO

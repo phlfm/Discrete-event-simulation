@@ -42,55 +42,60 @@ namespace DESE {
 		}
 	}; ///SystemManager
 
-	std::string Boost2String(const boost::any & Parameter) 
-	{
-		std::string ParamStr;
+	namespace { //anonymous namespace start
+		/* These functions were causing linking errors "function already defined in FILE"
+		A possible solution would be declaring them static, but anonymous namespace is a superior solution
+		https://stackoverflow.com/questions/154469/unnamed-anonymous-namespaces-vs-static-functions
+		*/
+		std::string Boost2String(const boost::any & Parameter)
+		{
+			std::string ParamStr;
 
-		// Convert Parameter to std::string
-		try
-		{
-			ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
-		}
-		catch (const boost::bad_any_cast e)
-		{
+			// Convert Parameter to std::string
 			try
 			{
-				ParamStr = boost::any_cast<std::string>(Parameter);
+				ParamStr = (std::string)(boost::any_cast<const char*>(Parameter));
 			}
 			catch (const boost::bad_any_cast e)
 			{
-				return "";
+				try
+				{
+					ParamStr = boost::any_cast<std::string>(Parameter);
+				}
+				catch (const boost::bad_any_cast e)
+				{
+					return "";
+				}
 			}
+
+			return ParamStr;
 		}
 
-		return ParamStr;
-	}
-
-	//template <typename T>
-	void PrintSysMsg(std::string Message, const SystemManager *SysMan, int OutputColor = 4, int DefaultColor = 7)
-	{
-		if (SysMan->Settings.Print_SystemCommands)
+		//template <typename T>
+		void PrintSysMsg(std::string Message, const SystemManager *SysMan, int OutputColor = 4, int DefaultColor = 7)
 		{
-			// Set console color
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			SetConsoleTextAttribute(hConsole, OutputColor);
+			if (SysMan->Settings.Print_SystemCommands)
+			{
+				// Set console color
+				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(hConsole, OutputColor);
 
-			std::cout << Message;
+				std::cout << Message;
 
-			// Reset to default console color
-			SetConsoleTextAttribute(hConsole, DefaultColor);
+				// Reset to default console color
+				SetConsoleTextAttribute(hConsole, DefaultColor);
 
-		} // close if
+			} // close if
 
-		return;
-		// Color codes:
-		// DARK	1		2		3		4		5		6		7		 8
-		//		Blue	Green	Cyan	Red		Purple	Gold	Whiteish Gray
-		// LIGHT	9		10		11		12		13		14		15	
-		//			Blue	Green	Cyan	Red		Purple	Yellow	White
-		// 16 to ... = Same colors but with blue background
-		// 16 = 10 in hexa = darkblue background + black font)
-	} ///void PrintSysMsg
-
+			return;
+			// Color codes:
+			// DARK	1		2		3		4		5		6		7		 8
+			//		Blue	Green	Cyan	Red		Purple	Gold	Whiteish Gray
+			// LIGHT	9		10		11		12		13		14		15	
+			//			Blue	Green	Cyan	Red		Purple	Yellow	White
+			// 16 to ... = Same colors but with blue background
+			// 16 = 10 in hexa = darkblue background + black font)
+		} ///void PrintSysMsg
+	}//anonymous namespace end
 } /// namespace DESE
 #endif /// H_SYSMAN

@@ -20,7 +20,7 @@ namespace DESE {
 		Event(SystemManager *SystemManager = nullptr, bool shouldReinstantiate = false)
 			: SysMan(SystemManager), should_Reinstantiate(shouldReinstantiate) {}
 
-		virtual ~Event();
+		virtual ~Event() {};
 
 		virtual void Run(const vector<boost::any> &Parameters) = 0;
 

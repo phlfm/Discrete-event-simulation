@@ -11,8 +11,7 @@ void DESE::GlobalVariables::ClearAllVariables()
 
 void DESE::GlobalVariables::VarSet(const std::string Key, const boost::any Value)
 {
-	VarMap.insert_or_assign(Key, Value);
-	return;
+	VarMap.insert_or_assign(Key, Value); return;
 }
 
 boost::any DESE::GlobalVariables::VarGet(const std::string Key) const

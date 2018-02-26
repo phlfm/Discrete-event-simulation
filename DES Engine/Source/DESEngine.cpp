@@ -3,17 +3,17 @@
 
 #include "DESEngine.h"
 
-DESE::DESEngine::DESEngine(SystemManager SystemManager) : SysMan(SystemManager)
+DESE::DESEngine::DESEngine(SystemManager *SystemManager) : SysMan(SystemManager)
 {
-	SystemEvents.insert({ "Evt_Halt", new SysEvent_HALT(&SysMan) });
-	SystemEvents.insert({ "Evt_Goto", new SysEvent_GOTO(&SysMan) });
-	SystemEvents.insert({ "Evt_Label", new SysEvent_LABEL(&SysMan) }); // since label does nothing, it's sysman is optional
+	SystemEvents.insert({ "Evt_Halt", new SysEvent_HALT(SysMan) });
+	SystemEvents.insert({ "Evt_Goto", new SysEvent_GOTO(SysMan) });
+	SystemEvents.insert({ "Evt_Label", new SysEvent_LABEL(SysMan) }); // since label does nothing, it's sysman is optional
 
-	SysMan.Event_Catalog.RegisterEvent("@HALT", SystemEvents.at("Evt_Halt"));
-	SysMan.Event_Catalog.RegisterEvent("@GOTO", SystemEvents.at("Evt_Goto"));
+	SysMan->Event_Catalog.RegisterEvent("@HALT", SystemEvents.at("Evt_Halt"));
+	SysMan->Event_Catalog.RegisterEvent("@GOTO", SystemEvents.at("Evt_Goto"));
 
-	SysMan.Event_Catalog.RegisterEvent("LABEL", SystemEvents.at("Evt_Label"));
-	SysMan.Event_Catalog.RegisterEvent("@@", SystemEvents.at("Evt_Label"));
+	SysMan->Event_Catalog.RegisterEvent("@LABEL", SystemEvents.at("Evt_Label"));
+	SysMan->Event_Catalog.RegisterEvent("@@", SystemEvents.at("Evt_Label"));
 }
 
 DESE::DESEngine::~DESEngine()
@@ -27,7 +27,7 @@ DESE::DESEngine::~DESEngine()
 
 void DESE::DESEngine::Simulation_Start(const std::string &Filename)
 {
-	PrintSysMsg("@SYS: Simulation_Start(" + Filename + ")\n", &SysMan, 12);
+	PrintSysMsg("@SYS: Simulation_Start(" + Filename + ")\n", SysMan, 12);
 	EventList_Load(Filename);
 	Simulation_Start();
 }
@@ -36,7 +36,7 @@ void DESE::DESEngine::Simulation_Start(const std::string &Filename)
 void DESE::DESEngine::Simulation_Start()
 {
 	// Clear Variables
-	SysMan.UserVariables.ClearAllVariables();
+	SysMan->UserVariables.ClearAllVariables();
 	
 	Print_AllSettings();
 	Simulation_Loop();
@@ -50,11 +50,11 @@ void DESE::DESEngine::Simulation_Loop()
 	while (true)
 	{
 		// Check Stop conditions
-			if (SysMan.ShouldStop()) { return; }
+			if (SysMan->ShouldStop()) { return; }
 		// Gets next event name and params
-			NextEvent = SysMan.Event_List.getNextEvent();
+			NextEvent = SysMan->Event_List.getNextEvent();
 		// Runs next event with it's corresponding params.
-			SysMan.Event_Catalog.getEvent(NextEvent.Name)->Run(NextEvent.Params);
+			SysMan->Event_Catalog.getEvent(NextEvent.Name)->Run(NextEvent.Params);
 	} /// while
 } /// Simulation_Loop
 
@@ -62,17 +62,18 @@ void DESE::DESEngine::Simulation_End()
 {
 	using std::cout; using std::endl;
 	cout << "\n\nSimulation Ended. Reason: ";
-	switch (SysMan.Status)
+	switch (SysMan->Status)
 	{
 	case Simulation_Halted_byEvent:
-			cout << " Halted by Event" << endl;
+		cout << " Halted by Event" << endl; break;
 	case Simulation_Halted_noMoreEvents:
-			cout << " End of Event List" << endl;
+			cout << " End of Event List" << endl; break;
 	case Simulation_Failed:
-		cout << " Simulation Failed" << endl;
+		cout << " Simulation Failed" << endl; break;
+	case Simulation_Running:
+		cout << " Simulation Reached End" << endl; break;
 	default:
-		cout << " Unknown?" << endl;
-
+		cout << " Unknown?" << endl; break;
 	}
 }
 
@@ -81,12 +82,12 @@ void DESE::DESEngine::Print_AllSettings()
 	using std::cout; using std::endl;
 	cout << "Engine current settings: " << endl;
 
-	cout << "\tPrint System Commands: " << SysMan.Settings.Print_SystemCommands << endl;
+	cout << "\tPrint System Commands: " << SysMan->Settings.Print_SystemCommands << endl;
 
-	cout << "\tGOTO: Halt on Fail: " << SysMan.Settings.GoTo_HaltOnFail << endl;
-	cout << "\tGOTO: Print: " << SysMan.Settings.GoTo_Print << endl;
+	cout << "\tGOTO: Halt on Fail: " << SysMan->Settings.GoTo_HaltOnFail << endl;
+	cout << "\tGOTO: Print: " << SysMan->Settings.GoTo_Print << endl;
 	
-	cout << "\tEvent List Size: " << SysMan.Event_List.size() << endl;
+	cout << "\tEvent List Size: " << SysMan->Event_List.size() << endl;
 	cout << "-------------------------------------------" << endl;
 }
 
@@ -103,7 +104,7 @@ void DESE::DESEngine::EventList_Load(const std::string & Filename)
 	std::string				 EventName;
 	std::vector<boost::any>  EventParams;
 
-	SysMan.Event_List.clear();
+	SysMan->Event_List.clear();
 
 	// Loop Lines of File
 	for (unsigned int i = 1; i <= fLineCount; i++)
@@ -123,18 +124,18 @@ void DESE::DESEngine::EventList_Load(const std::string & Filename)
 		if (WordBlocks.size() > 0)
 		{
 			EventName = WordBlocks.at(0);
-			SysMan.Event_List.push_back({ EventName, EventParams });
+			SysMan->Event_List.push_back({ EventName, EventParams });
 		}
 
 	} /// for line looping
 
-	if (SysMan.Settings.Print_SystemCommands)
+	if (SysMan->Settings.Print_SystemCommands)
 	{
-		PrintSysMsg("@SYS: EventList Loaded:\n", &SysMan, 11);
-		PrintSysMsg("\t Event#\t EventName\t #Params\n", &SysMan, 11);
-		for (unsigned int i = 0; i < SysMan.Event_List.size(); i++)
+		PrintSysMsg("@SYS: EventList Loaded:\n", SysMan, 11);
+		PrintSysMsg("\t Event#\t EventName\t #Params\n", SysMan, 11);
+		for (unsigned int i = 0; i < SysMan->Event_List.size(); i++)
 		{
-			PrintSysMsg("\t " + std::to_string(i) + "\t " + SysMan.Event_List.at(i).Name + "\t\t " + std::to_string(SysMan.Event_List.at(i).Params.size()) + "\n", &SysMan, 3);
+			PrintSysMsg("\t " + std::to_string(i) + "\t " + SysMan->Event_List.at(i).Name + "\t\t " + std::to_string(SysMan->Event_List.at(i).Params.size()) + "\n", SysMan, 3);
 		}
 	}
 

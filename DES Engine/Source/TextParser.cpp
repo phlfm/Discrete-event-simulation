@@ -53,7 +53,7 @@ void TextParser::LoadLines(const std::string &Filename)
 	std::string str;
 
 	
-	if (!file) { file.close(); throw std::exception("TextParser::LoadLines: Could not open file"); }
+	if (!file) { file.close(); throw std::runtime_error("TextParser::LoadLines: Could not open file '" + Filename + "'"); }
 
 	flin.clear();
 

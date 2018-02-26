@@ -23,6 +23,6 @@
 		// (como tab e espaço)não
 	// alteram seu funcionamento
 // Whitespaces entre os parametros também não
-
+ADD $D i%41 $UserHalt
 @HALT $UserHalt
 @GOTO "Soma Iterativa"
