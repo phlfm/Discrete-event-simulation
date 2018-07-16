@@ -1,5 +1,6 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
 #pragma once
 #include "Main.h"
@@ -8,11 +9,11 @@ using namespace DESE;
 
 int main()
 {
-	//std::string DropboxPath = "C:/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/"; // path do desktop
-	std::string DropboxPath = "C:/Users/pedri/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/"; // path do laptop
+	std::string DropboxPath = "C:/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/"; // path do desktop
+	//std::string DropboxPath = "C:/Users/pedri/Dropbox/Projects/Programming/DES Engine/DES Engine/Resource/Basic MVN Usage/"; // path do laptop
 	std::string File = DropboxPath + "ADD MalFormatado" + ".txt";
 	
-
+	try {
 		SystemManager SysMan;
 		SysMan.Settings.Print_SystemCommands = true;
 		SysMan.Settings.GoTo_Print = true;
@@ -22,10 +23,12 @@ int main()
 
 		DESEngine DE = DESEngine(&SysMan);
 		DE.Simulation_Start(File);
-	
-		//std::cout << "Caught untreated exception in main.cpp" << std::endl;
-		//std::cout << ex.what() << std::endl << std::endl;
-
+	}
+	catch (std::exception ex)
+	{
+		std::cout << "Caught untreated exception in main.cpp" << std::endl;
+		std::cout << ex.what() << std::endl << std::endl;
+	}
 
 	system("pause");
 	return 0;

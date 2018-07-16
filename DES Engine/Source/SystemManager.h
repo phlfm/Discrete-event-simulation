@@ -1,8 +1,11 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
-#pragma once
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
+
+
 #ifndef H_SYSMAN
 #define H_SYSMAN
+#pragma once
 
 #include "boost/any.hpp"
 #include <string>

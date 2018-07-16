@@ -1,9 +1,10 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
-#pragma once
 #ifndef H_EVENT
 #define H_EVENT
+#pragma once
 
 #include <string>
 #include <vector>
@@ -25,7 +26,7 @@ namespace DESE {
 		virtual void Run(const vector<boost::any> &Parameters) = 0;
 
 		// This function allows for a soft reinstantiation or a hard one
-		// (hard instantiation requires user to change CurrentEventHandler to a "new Event*" and "delete this;")
+		/// (hard instantiation requires user to change CurrentEventHandler to a "new Event*" and "delete this;")
 		virtual void Reinstantiate(Event* CurrentEventHandler) { return; }
 
 		bool shouldReinstantiate() { return should_Reinstantiate; }
@@ -36,6 +37,6 @@ namespace DESE {
 		bool should_Reinstantiate = false;
 		SystemManager *SysMan = nullptr;
 
-}; // class Event
-} // namespace DESE
-#endif // H_EVENT
+}; /// class Event
+} /// namespace DESE
+#endif /// H_EVENT

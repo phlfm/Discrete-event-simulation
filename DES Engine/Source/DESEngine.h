@@ -1,19 +1,23 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
-#pragma once
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
+
 #ifndef H_DESENGINE
 #define H_DESENGINE
+#pragma once
+
 // STD includes:
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <iostream>
-#include "boost/any.hpp" //C++17: Update to std::any
+	#include <string>
+	#include <vector>
+	#include <unordered_map>
+	#include <iostream>
+	#include "boost/any.hpp" //C++17: Update to std::any
+
 // My Includes:
-#include "TextParser.h"
-#include "Event.h"
-#include "SystemManager.h"
-#include "SystemEvents.h"
+	#include "TextParser.h"
+	#include "Event.h"
+	#include "SystemManager.h"
+	#include "SystemEvents.h"
 
 
 using std::string; using std::vector; using boost::any;

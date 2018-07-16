@@ -1,5 +1,6 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
 
 /*
@@ -8,9 +9,10 @@ Necessidades dessa classe:
 	- event execution history?
 
 */
-#pragma once
+
 #ifndef H_EVENTLIST
 #define H_EVENTLIST
+#pragma once
 
 #include <string>
 #include <vector>

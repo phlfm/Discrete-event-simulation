@@ -27,12 +27,11 @@
 			 -- Now exceptions WON'T be handled and will be allowed to propagate through code.
 			
 TODO:
-	- Acertar
-		-- DESEngine.h/cpp
-		-- Main.h/cpp
-		-- TextParser.h/cpp (?)
-	- Test Changes
-	- Update pointers to smart pointers
+	- "OutputHandler" class to output contents.
+		This class should allow user to derive from it and fire a thread for asynchronous input.		
+	- Update pointers to smart pointers (are there still pointers in code base??)
+	- Update to C++17 (replace boost::any to std::any)
+	- Update to C++ Core Guideline
 	
 TAGS:
 	C++17 Things that need updating to C++17 standards.

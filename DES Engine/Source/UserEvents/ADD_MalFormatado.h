@@ -1,9 +1,10 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
-#pragma once
 #ifndef H_ADDMALFORMATADO
 #define H_ADDMALFORMATADO
+#pragma once
 
 #include <iostream>
 #include <memory>

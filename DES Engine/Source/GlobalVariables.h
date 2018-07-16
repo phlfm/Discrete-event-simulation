@@ -1,11 +1,11 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
 #ifndef H_GLOBALVARIABLES
 #define H_GLOBALVARIABLES
-
-
 #pragma once
+
 #include <typeinfo> // Where is this being used?
 #include <string>
 #include <unordered_map>
@@ -18,9 +18,9 @@ namespace DESE {
 	public:
 		void ClearAllVariables();
 
-		void				  VarSet(const std::string Key, const boost::any Value);
-		void				  VarDel(const std::string Key);
-		bool				  VarExists(const std::string Key) const;
+		void	VarSet(const std::string Key, const boost::any Value);
+		void	VarDel(const std::string Key);
+		bool	VarExists(const std::string Key) const;
 
 		template <typename T>
 		T				VarGet_casted(const std::string Key) const;

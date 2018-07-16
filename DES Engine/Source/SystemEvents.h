@@ -1,9 +1,11 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
-#pragma once
+
 #ifndef H_SYSEVENTS
 #define H_SYSEVENTS
+#pragma once
 
 #include "Event.h"
 #include "SystemManager.h"
@@ -17,27 +19,27 @@ namespace DESE {
 		// a user variable and if that user variable is diferent from zero, simulation is halted.
 		virtual void Run(const vector<boost::any> &Parameters) {
 			// If no parameter is found, halt simulation and return from event call.
-			if (Parameters.size() == 0) { SysMan->Status = Simulation_Halted_byEvent; return; }
-
+				if (Parameters.size() == 0) { SysMan->Status = Simulation_Halted_byEvent; return; }
+				
 			// if at least one parameter is found, loop looking for a Halt Test Variable,
 			// if this variable evaluates to anything other than zero, simulation is halted.
-			std::string HaltTestVariable = "";
-			for (int i = 0; i < Parameters.size(); ++i) {
-				HaltTestVariable = Boost2String(Parameters.at(i));
-				if (SysMan->UserVariables.VarExists(HaltTestVariable))
-				{
-					if (SysMan->UserVariables.VarGet_casted<int>(HaltTestVariable) != 0)
+				std::string HaltTestVariable = "";
+				for (int i = 0; i < Parameters.size(); ++i) {
+					HaltTestVariable = Boost2String(Parameters.at(i));
+					if (SysMan->UserVariables.VarExists(HaltTestVariable))
 					{
-						// HaltTestVariable != 0 --> HALT
-						PrintSysMsg("SysEvent_HALT: Halt test passed, halting engine...\n", SysMan);
-						SysMan->Status = Simulation_Halted_byEvent;
-						return;
+						if (SysMan->UserVariables.VarGet_casted<int>(HaltTestVariable) != 0)
+						{
+							// HaltTestVariable != 0 --> HALT
+							PrintSysMsg("SysEvent_HALT: Halt test passed, halting engine...\n", SysMan);
+							SysMan->Status = Simulation_Halted_byEvent;
+							return;
+						}
+					} else // HaltTestVariable doesnt exist
+					{
+						PrintSysMsg("SysEvent_HALT: Halt test variable not found (" + HaltTestVariable + "\n", SysMan);
 					}
-				} else // HaltTestVariable doesnt exist
-				{
-					PrintSysMsg("SysEvent_HALT: Halt test variable not found (" + HaltTestVariable + "\n", SysMan);
-				}
-			} /// for loop
+				} /// for loop
 			// No Suitable halt parameter found - do nothing
 			PrintSysMsg("SysEvent_HALT: No suitable halt condition found, resuming simulation.\n", SysMan);
 			return;

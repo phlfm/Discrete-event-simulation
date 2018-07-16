@@ -1,5 +1,6 @@
 // Polytechnic School of the University of Sao Paulo
 // Copyright Pedro Henrique Lage Furtado de Mendonca - 2018
+// C++ Core "Standard" by Bjarne Stroustrup: https://goo.gl/4bziNu
 
 #include "TextParser.h"
 #define _HTab	9  // Horizontal Tab
@@ -50,13 +51,14 @@ void TextParser::LoadLines(const std::string &Filename)
 	TP_Filename = Filename;
 
 	std::ifstream file(Filename, std::ifstream::in);
-	std::string str;
+	std::string str {""};
 
 	
 	if (!file) { file.close(); throw std::runtime_error("TextParser::LoadLines: Could not open file '" + Filename + "'"); }
 
 	flin.clear();
 
+	// Push back file lines while available
 	while (std::getline(file, str))
 	{
 		flin.push_back(str);
@@ -75,7 +77,7 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 	///http://www.boost.org/doc/libs/1_64_0/doc/html/string_algo/usage.html#idp124639424
 
 	char C = 0;
-	int Ctrl = 0; // 1 = Found Word, 2 Found String, -1 = Comment
+	int Ctrl = 0; // Control Flag: 1 = Found Word, 2 Found String, -1 = Comment
 	std::vector<char> Word;
 
 	WordBlocks.clear();
@@ -129,7 +131,7 @@ void TextParser::GetWordBlocks(std::vector<std::string> &WordBlocks, const std::
 }
 
 #pragma region Helper Functions for GetWordBlocks
-void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents, const bool AppendpS)
+inline void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks, std::vector<char> &Word, unsigned int &i, int &Ctrl, const std::string &LineContents, const bool AppendpS)
 {
 	if (C == _Quote && Ctrl == 0)
 	{
@@ -182,7 +184,7 @@ void TextParser::IfStringGetString(char &C, std::vector<std::string> &WordBlocks
 	return;
 }
 
-void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl)
+inline void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, unsigned int &i, int &Ctrl)
 {
 	if (C == _FSlash)
 	{
@@ -195,7 +197,7 @@ void TextParser::IfCommentSetCtrl(char &C, const std::string & LineContents, uns
 	}
 }
 
-bool TextParser::IsCharWS(const char C)
+inline bool TextParser::IsCharWS(const char C)
 {
 	if (C == _HTab || C == _NL || C == _VTab || C == _CR || C == _Space) { return true; }
 	return false;
